@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Laporan - Perpustakaan</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: Arial, sans-serif; }
+        body { background-color: #f4f6f9; }
+        .navbar {
+            background-color: #1a73e8; color: white;
+            padding: 15px 20px; display: flex;
+            justify-content: space-between; align-items: center;
+        }
+        .navbar h1 { font-size: 18px; }
+        .navbar a { color: white; text-decoration: none; font-size: 14px; }
+        .container { padding: 20px; max-width: 900px; margin: auto; }
+        .card {
+            background: white; padding: 20px; border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08); margin-bottom: 15px;
+        }
+        .card h3 { color: #1a73e8; margin-bottom: 8px; }
+        .card p { font-size: 14px; color: #555; }
+        .stat-grid {
+            display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 15px; margin-bottom: 20px;
+        }
+        .stat-card {
+            background: white; padding: 20px; border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08); text-align: center;
+        }
+        .stat-card h2 { color: #1a73e8; font-size: 28px; }
+        .stat-card p { font-size: 13px; color: #666; }
+    </style>
+</head>
+<body>
+
+    <nav class="navbar">
+        <h1>📊 Laporan</h1>
+        <a href="dashboard.html">← Kembali</a>
+    </nav>
+
+    <div class="container">
+        <div class="stat-grid">
+            <div class="stat-card">
+                <h2>50</h2>
+                <p>Total Buku</p>
+            </div>
+            <div class="stat-card">
+                <h2>25</h2>
+                <p>Total Anggota</p>
+            </div>
+            <div class="stat-card">
+                <h2>10</h2>
+                <p>Buku Dipinjam</p>
+            </div>
+            <div class="stat-card">
+                <h2>3</h2>
+                <p>Terlambat</p>
+            </div>
+        </div>
+
+        <div class="card">
+            <h3>Laporan Peminjaman Terbaru</h3>
+            <p>1. Hafiz Al Afandi — Belajar Pemrograman Web — 20 Okt 2026</p>
+            <p>2. Farid Ridho — Rancangan Perangkat Lunak — 19 Okt 2026</p>
+            <p>3. Naufal Ahmad Firdaus — Algoritma dan Struktur Data — 18 Okt 2026</p>
+        </div>
+
+        <div class="card">
+            <h3>Laporan Buku Terlambat</h3>
+            <p>1. Sheviani Tun Hasanah — Basis Data Modern — Telat 3 hari</p>
+            <p>2. Farid Ridho — Pemrograman Web — Telat 1 hari</p>
+        </div>
+    </div>
+
+</body>
+</html>
