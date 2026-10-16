@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Peminjaman - Perpustakaan</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: Arial, sans-serif; }
+        body { background-color: #f4f6f9; }
+        .navbar {
+            background-color: #1a73e8; color: white;
+            padding: 15px 20px; display: flex;
+            justify-content: space-between; align-items: center;
+        }
+        .navbar h1 { font-size: 18px; }
+        .navbar a { color: white; text-decoration: none; font-size: 14px; }
+        .container { padding: 20px; max-width: 900px; margin: auto; }
+        .welcome {
+            background: white; padding: 20px; border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08); margin-bottom: 20px;
+        }
+        .welcome h2 { color: #1a73e8; margin-bottom: 8px; }
+        .buku-grid {
+            display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 15px;
+        }
+        .buku-card {
+            background: white; padding: 15px; border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+        .buku-card h4 { color: #1a73e8; margin-bottom: 8px; }
+        .buku-card p { font-size: 13px; color: #666; margin-bottom: 5px; }
+        .btn-pinjam {
+            width: 100%; padding: 10px; margin-top: 10px;
+            background-color: #1a73e8; color: white;
+            border: none; border-radius: 8px; cursor: pointer;
+            font-weight: bold;
+        }
+        .btn-pinjam:hover { background-color: #1557b0; }
+    </style>
+</head>
+<body>
+
+    <nav class="navbar">
+        <h1>📚 Halaman Anggota</h1>
+        <a href="index.html">Logout</a>
+    </nav>
+
+    <div class="container">
+        <div class="welcome">
+            <h2>Selamat Datang, Anggota! 👋</h2>
+            <p>Silakan pilih buku yang ingin Anda pinjam.</p>
+        </div>
+
+        <div class="buku-grid">
+            <div class="buku-card">
+                <h4>Belajar Pemrograman Web</h4>
+                <p>Penulis: Budi Raharjo</p>
+                <p>Tahun: 2023</p>
+                <button class="btn-pinjam" onclick="alert('Buku berhasil dipinjam!')">Pinjam Buku</button>
+            </div>
+            <div class="buku-card">
+                <h4>Rancangan Perangkat Lunak</h4>
+                <p>Penulis: Sri Mulyani</p>
+                <p>Tahun: 2022</p>
+                <button class="btn-pinjam" onclick="alert('Buku berhasil dipinjam!')">Pinjam Buku</button>
+            </div>
+            <div class="buku-card">
+                <h4>Algoritma dan Struktur Data</h4>
+                <p>Penulis: Rinaldi Munir</p>
+                <p>Tahun: 2021</p>
+                <button class="btn-pinjam" onclick="alert('Buku berhasil dipinjam!')">Pinjam Buku</button>
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>
