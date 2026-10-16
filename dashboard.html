@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Admin - Perpustakaan</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: Arial, sans-serif; }
+        body { background-color: #f4f6f9; }
+        .navbar {
+            background-color: #1a73e8; color: white;
+            padding: 15px 20px; display: flex;
+            justify-content: space-between; align-items: center;
+        }
+        .navbar h1 { font-size: 18px; }
+        .navbar a { color: white; text-decoration: none; font-size: 14px; }
+        .container { padding: 20px; max-width: 900px; margin: auto; }
+        .welcome {
+            background: white; padding: 20px; border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08); margin-bottom: 20px;
+        }
+        .welcome h2 { color: #1a73e8; margin-bottom: 8px; }
+        .menu-grid {
+            display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 15px;
+        }
+        .menu-card {
+            background: white; padding: 20px; border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            text-align: center; text-decoration: none; color: #333;
+            transition: transform 0.2s;
+        }
+        .menu-card:hover { transform: translateY(-4px); }
+        .menu-card .icon { font-size: 30px; margin-bottom: 10px; }
+        .menu-card h3 { font-size: 15px; color: #1a73e8; }
+    </style>
+</head>
+<body>
+
+    <nav class="navbar">
+        <h1>📚 Dashboard Admin</h1>
+        <a href="index.html">Logout</a>
+    </nav>
+
+    <div class="container">
+        <div class="welcome">
+            <h2>Selamat Datang, Admin! 👋</h2>
+            <p>Kelola data perpustakaan dengan mudah melalui menu di bawah ini.</p>
+        </div>
+
+        <div class="menu-grid">
+            <a href="buku.html" class="menu-card">
+                <div class="icon">📖</div>
+                <h3>Kelola Buku</h3>
+            </a>
+            <a href="#" class="menu-card">
+                <div class="icon">👥</div>
+                <h3>Kelola Anggota</h3>
+            </a>
+            <a href="#" class="menu-card">
+                <div class="icon">📋</div>
+                <h3>Peminjaman</h3>
+            </a>
+            <a href="#" class="menu-card">
+                <div class="icon">📊</div>
+                <h3>Laporan</h3>
+            </a>
+        </div>
+    </div>
+
+</body>
+</html>
