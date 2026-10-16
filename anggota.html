@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kelola Anggota - Perpustakaan</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: Arial, sans-serif; }
+        body { background-color: #f4f6f9; }
+        .navbar {
+            background-color: #1a73e8; color: white;
+            padding: 15px 20px; display: flex;
+            justify-content: space-between; align-items: center;
+        }
+        .navbar h1 { font-size: 18px; }
+        .navbar a { color: white; text-decoration: none; font-size: 14px; }
+        .container { padding: 20px; max-width: 900px; margin: auto; }
+        .header-actions {
+            display: flex; justify-content: space-between;
+            align-items: center; margin-bottom: 20px;
+        }
+        .header-actions h2 { color: #1a73e8; }
+        .btn-tambah {
+            background-color: #1a73e8; color: white;
+            padding: 10px 18px; border: none;
+            border-radius: 8px; cursor: pointer;
+            font-weight: bold; font-size: 14px;
+        }
+        .btn-tambah:hover { background-color: #1557b0; }
+        table {
+            width: 100%; border-collapse: collapse;
+            background: white; border-radius: 10px;
+            overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+        th, td {
+            padding: 12px 15px; text-align: left;
+            font-size: 13px; border-bottom: 1px solid #eee;
+        }
+        th { background-color: #1a73e8; color: white; font-size: 13px; }
+        tr:hover { background-color: #f1f5ff; }
+        .btn-aksi {
+            padding: 5px 10px; border: none;
+            border-radius: 5px; cursor: pointer;
+            font-size: 12px; margin-right: 5px;
+        }
+        .btn-edit { background-color: #ffc107; color: #333; }
+        .btn-hapus { background-color: #dc3545; color: white; }
+    </style>
+</head>
+<body>
+
+    <nav class="navbar">
+        <h1>👥 Kelola Anggota</h1>
+        <a href="dashboard.html">← Kembali</a>
+    </nav>
+
+    <div class="container">
+        <div class="header-actions">
+            <h2>Daftar Anggota</h2>
+            <button class="btn-tambah" onclick="alert('Fitur tambah anggota akan segera hadir!')">+ Tambah Anggota</button>
+        </div>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>No</th>
+                    <th>Nama</th>
+                    <th>NIS/NIM</th>
+                    <th>Alamat</th>
+                    <th>No. Telepon</th>
+                    <th>Aksi</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>1</td>
+                    <td>Hafiz Al Afandi</td>
+                    <td>2026001</td>
+                    <td>Jakarta</td>
+                    <td>08123456789</td>
+                    <td>
+                        <button class="btn-aksi btn-edit" onclick="alert('Edit anggota')">Edit</button>
+                        <button class="btn-aksi btn-hapus" onclick="alert('Hapus anggota')">Hapus</button>
+                    </td>
+                </tr>
+                <tr>
+                    <td>2</td>
+                    <td>Farid Ridho</td>
+                    <td>2026002</td>
+                    <td>Depok</td>
+                    <td>08234567890</td>
+                    <td>
+                        <button class="btn-aksi btn-edit" onclick="alert('Edit anggota')">Edit</button>
+                        <button class="btn-aksi btn-hapus" onclick="alert('Hapus anggota')">Hapus</button>
+                    </td>
+                </tr>
+                <tr>
+                    <td>3</td>
+                    <td>Naufal Ahmad Firdaus</td>
+                    <td>2026003</td>
+                    <td>Bogor</td>
+                    <td>08345678901</td>
+                    <td>
+                        <button class="btn-aksi btn-edit" onclick="alert('Edit anggota')">Edit</button>
+                        <button class="btn-aksi btn-hapus" onclick="alert('Hapus anggota')">Hapus</button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+</body>
+</html>
