@@ -8,6 +8,7 @@
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
         body { background-color: #f0f2f5; color: #333; }
 
+        /* Navbar */
         .navbar {
             background-color: #ffffff; color: #333;
             padding: 15px 20px; display: flex;
@@ -41,6 +42,7 @@
         }
         .btn-tambah:hover { background-color: #1557b0; transform: translateY(-2px); }
 
+        /* Desain Tabel */
         .table-container {
             background: white; border-radius: 15px;
             box-shadow: 0 4px 15px rgba(0,0,0,0.05);
@@ -53,6 +55,7 @@
         tr:last-child td { border-bottom: none; }
         tr:hover td { background-color: #f9fbff; }
 
+        /* Tombol Aksi */
         .btn-aksi {
             padding: 6px 12px; border: none;
             border-radius: 6px; cursor: pointer;
@@ -63,6 +66,11 @@
         .btn-edit:hover { background-color: #ffeeba; }
         .btn-hapus { background-color: #f8d7da; color: #721c24; }
         .btn-hapus:hover { background-color: #f5c6cb; }
+        
+        /* Teks jika tabel kosong */
+        .empty-state {
+            text-align: center; padding: 30px; color: #888; font-style: italic;
+        }
     </style>
 </head>
 <body>
@@ -75,7 +83,7 @@
     <div class="container">
         <div class="header-actions">
             <h2>Daftar Anggota Perpustakaan</h2>
-            <button class="btn-tambah" onclick="alert('Fitur tambah anggota akan segera hadir!')">+ Tambah Anggota</button>
+            <button class="btn-tambah" onclick="tambahAnggota()">+ Tambah Anggota</button>
         </div>
 
         <div class="table-container">
@@ -85,55 +93,82 @@
                         <th>No</th>
                         <th>Nama Lengkap</th>
                         <th>NIS/NIM</th>
+                        <th>Alamat</th>
                         <th>No. Telepon</th>
                         <th>Aksi</th>
                     </tr>
                 </thead>
-                <tbody>
-                    <tr>
-                        <td>1</td>
-                        <td>Hafiz Al Afandi</td>
-                        <td>2026001</td>
-                        <td>08123456789</td>
-                        <td>
-                            <button class="btn-aksi btn-edit" onclick="alert('Edit anggota')">Edit</button>
-                            <button class="btn-aksi btn-hapus" onclick="alert('Hapus anggota')">Hapus</button>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>2</td>
-                        <td>Farid Ridho</td>
-                        <td>2026002</td>
-                        <td>08234567890</td>
-                        <td>
-                            <button class="btn-aksi btn-edit" onclick="alert('Edit anggota')">Edit</button>
-                            <button class="btn-aksi btn-hapus" onclick="alert('Hapus anggota')">Hapus</button>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>3</td>
-                        <td>Naufal Ahmad Firdaus</td>
-                        <td>2026003</td>
-                        <td>08345678901</td>
-                        <td>
-                            <button class="btn-aksi btn-edit" onclick="alert('Edit anggota')">Edit</button>
-                            <button class="btn-aksi btn-hapus" onclick="alert('Hapus anggota')">Hapus</button>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>4</td>
-                        <td>Sheviani Tun Hasanah</td>
-                        <td>2026004</td>
-                        <td>08456789012</td>
-                        <td>
-                            <button class="btn-aksi btn-edit" onclick="alert('Edit anggota')">Edit</button>
-                            <button class="btn-aksi btn-hapus" onclick="alert('Hapus anggota')">Hapus</button>
-                        </td>
-                    </tr>
+                <tbody id="tabel-anggota">
+                    <!-- Data akan diisi oleh JavaScript -->
                 </tbody>
             </table>
         </div>
     </div>
+
+    <script>
+        // Array untuk menyimpan data anggota sementara
+        let daftarAnggota = [];
+
+        // Fungsi untuk menampilkan data ke tabel
+        function renderTabel() {
+            const tbody = document.getElementById('tabel-anggota');
+            tbody.innerHTML = ''; // Kosongkan tabel dulu
+
+            if (daftarAnggota.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="6" class="empty-state">Belum ada data anggota. Silakan klik "+ Tambah Anggota".</td></tr>`;
+                return;
+            }
+
+            daftarAnggota.forEach((anggota, index) => {
+                const row = `
+                    <tr>
+                        <td>${index + 1}</td>
+                        <td>${anggota.nama}</td>
+                        <td>${anggota.nim}</td>
+                        <td>${anggota.alamat}</td>
+                        <td>${anggota.telp}</td>
+                        <td>
+                            <button class="btn-aksi btn-edit" onclick="alert('Fitur edit belum tersedia')">Edit</button>
+                            <button class="btn-aksi btn-hapus" onclick="hapusAnggota(${index})">Hapus</button>
+                        </td>
+                    </tr>
+                `;
+                tbody.innerHTML += row;
+            });
+        }
+
+        // Fungsi untuk menambah anggota
+        function tambahAnggota() {
+            const nama = prompt("Masukkan Nama Lengkap:");
+            if (!nama) return; // Jika kosong atau cancel, hentikan
+
+            const nim = prompt("Masukkan NIS/NIM:");
+            if (!nim) return;
+
+            const alamat = prompt("Masukkan Alamat:");
+            if (!alamat) return;
+
+            const telp = prompt("Masukkan No. Telepon:");
+            if (!telp) return;
+
+            // Tambahkan ke array
+            daftarAnggota.push({ nama, nim, alamat, telp });
+            
+            // Tampilkan ulang tabel
+            renderTabel();
+        }
+
+        // Fungsi untuk menghapus anggota
+        function hapusAnggota(index) {
+            if (confirm("Apakah Anda yakin ingin menghapus data ini?")) {
+                daftarAnggota.splice(index, 1); // Hapus dari array
+                renderTabel(); // Tampilkan ulang tabel
+            }
+        }
+
+        // Tampilkan tabel kosong saat pertama kali dibuka
+        renderTabel();
+    </script>
 
 </body>
 </html>
