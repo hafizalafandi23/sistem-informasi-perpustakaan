@@ -3,74 +3,27 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kelola Buku - Perpustakaan</title>
+    <title>Kelola Buku - Admin</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
         body { background-color: #f0f2f5; color: #333; }
-
-        /* Navbar disamakan dengan Dashboard */
-        .navbar {
-            background-color: #ffffff; color: #333;
-            padding: 15px 20px; display: flex;
-            justify-content: space-between; align-items: center;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
-            position: sticky; top: 0; z-index: 100;
-        }
+        .navbar { background-color: #ffffff; padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 10px rgba(0,0,0,0.05); position: sticky; top: 0; z-index: 100; }
         .navbar h1 { font-size: 18px; color: #1a73e8; }
-        .navbar a { 
-            color: #1a73e8; text-decoration: none; font-size: 14px; 
-            font-weight: bold; padding: 8px 15px; border-radius: 8px;
-            background-color: #e8f0fe; transition: 0.3s;
-        }
+        .navbar a { color: #1a73e8; text-decoration: none; font-size: 14px; font-weight: bold; padding: 8px 15px; border-radius: 8px; background-color: #e8f0fe; transition: 0.3s; }
         .navbar a:hover { background-color: #d2e3fc; }
-
         .container { padding: 25px 20px; max-width: 1000px; margin: auto; }
-
-        .header-actions {
-            display: flex; justify-content: space-between;
-            align-items: center; margin-bottom: 20px;
-        }
+        .header-actions { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
         .header-actions h2 { color: #333; font-size: 22px; }
-        
-        .btn-tambah {
-            background-color: #1a73e8; color: white;
-            padding: 10px 18px; border: none;
-            border-radius: 8px; cursor: pointer;
-            font-weight: bold; font-size: 14px;
-            box-shadow: 0 4px 10px rgba(26, 115, 232, 0.3);
-            transition: all 0.3s ease;
-        }
-        .btn-tambah:hover { 
-            background-color: #1557b0; 
-            transform: translateY(-2px);
-        }
-
-        /* Desain Tabel Modern */
-        .table-container {
-            background: white; border-radius: 15px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
-            overflow-x: auto; /* Biar bisa di-scroll di HP */
-        }
+        .btn-tambah { background-color: #1a73e8; color: white; padding: 10px 18px; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; font-size: 14px; box-shadow: 0 4px 10px rgba(26, 115, 232, 0.3); transition: all 0.3s ease; }
+        .btn-tambah:hover { background-color: #1557b0; transform: translateY(-2px); }
+        .table-container { background: white; border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); overflow-x: auto; }
         table { width: 100%; border-collapse: collapse; }
         th, td { padding: 15px; text-align: left; font-size: 14px; }
-        
-        th { 
-            background-color: #f8f9fa; color: #555; 
-            font-weight: 600; border-bottom: 2px solid #eaeaea;
-        }
+        th { background-color: #f8f9fa; color: #555; font-weight: 600; border-bottom: 2px solid #eaeaea; }
         td { border-bottom: 1px solid #eaeaea; color: #444; }
         tr:last-child td { border-bottom: none; }
-        tr:hover td { background-color: #f9fbff; } /* Efek hover baris */
-
-        /* Tombol Aksi (Edit & Hapus) */
-        .btn-aksi {
-            padding: 6px 12px; border: none;
-            border-radius: 6px; cursor: pointer;
-            font-size: 12px; font-weight: bold; margin-right: 5px;
-            transition: 0.2s;
-        }
-        .btn-edit { background-color: #fff3cd; color: #856404; }
-        .btn-edit:hover { background-color: #ffeeba; }
+        tr:hover td { background-color: #f9fbff; }
+        .btn-aksi { padding: 6px 12px; border: none; border-radius: 6px; cursor: pointer; font-size: 12px; font-weight: bold; transition: 0.2s; }
         .btn-hapus { background-color: #f8d7da; color: #721c24; }
         .btn-hapus:hover { background-color: #f5c6cb; }
     </style>
@@ -85,7 +38,7 @@
     <div class="container">
         <div class="header-actions">
             <h2>Daftar Buku Perpustakaan</h2>
-            <button class="btn-tambah" onclick="alert('Fitur tambah buku akan segera hadir!')">+ Tambah Buku</button>
+            <button class="btn-tambah" onclick="tambahBuku()">+ Tambah Buku</button>
         </div>
 
         <div class="table-container">
@@ -100,55 +53,63 @@
                         <th>Aksi</th>
                     </tr>
                 </thead>
-                <tbody>
-                    <tr>
-                        <td>1</td>
-                        <td>Belajar Pemrograman Web</td>
-                        <td>Budi Raharjo</td>
-                        <td>2023</td>
-                        <td>5</td>
-                        <td>
-                            <button class="btn-aksi btn-edit" onclick="alert('Edit buku')">Edit</button>
-                            <button class="btn-aksi btn-hapus" onclick="alert('Hapus buku')">Hapus</button>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>2</td>
-                        <td>Rancangan Perangkat Lunak</td>
-                        <td>Sri Mulyani</td>
-                        <td>2022</td>
-                        <td>3</td>
-                        <td>
-                            <button class="btn-aksi btn-edit" onclick="alert('Edit buku')">Edit</button>
-                            <button class="btn-aksi btn-hapus" onclick="alert('Hapus buku')">Hapus</button>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>3</td>
-                        <td>Algoritma dan Struktur Data</td>
-                        <td>Rinaldi Munir</td>
-                        <td>2021</td>
-                        <td>2</td>
-                        <td>
-                            <button class="btn-aksi btn-edit" onclick="alert('Edit buku')">Edit</button>
-                            <button class="btn-aksi btn-hapus" onclick="alert('Hapus buku')">Hapus</button>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>4</td>
-                        <td>Basis Data Modern</td>
-                        <td>Abdul Kadir</td>
-                        <td>2020</td>
-                        <td>4</td>
-                        <td>
-                            <button class="btn-aksi btn-edit" onclick="alert('Edit buku')">Edit</button>
-                            <button class="btn-aksi btn-hapus" onclick="alert('Hapus buku')">Hapus</button>
-                        </td>
-                    </tr>
+                <tbody id="tabel-buku">
+                    <!-- Data akan diisi JS -->
                 </tbody>
             </table>
         </div>
     </div>
 
+    <script>
+        let daftarBuku = JSON.parse(localStorage.getItem('dataBuku')) || [];
+
+        function renderTabel() {
+            const tbody = document.getElementById('tabel-buku');
+            tbody.innerHTML = '';
+
+            if (daftarBuku.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="6" style="text-align:center; padding: 20px;">Belum ada data buku. Silakan klik "+ Tambah Buku".</td></tr>`;
+                return;
+            }
+
+            daftarBuku.forEach((buku, index) => {
+                tbody.innerHTML += `
+                    <tr>
+                        <td>${index + 1}</td>
+                        <td>${buku.judul}</td>
+                        <td>${buku.penulis}</td>
+                        <td>${buku.tahun}</td>
+                        <td>${buku.stok}</td>
+                        <td><button class="btn-aksi btn-hapus" onclick="hapusBuku(${index})">Hapus</button></td>
+                    </tr>
+                `;
+            });
+        }
+
+        function tambahBuku() {
+            const judul = prompt("Masukkan Judul Buku:");
+            if (!judul) return;
+            const penulis = prompt("Masukkan Nama Penulis:");
+            if (!penulis) return;
+            const tahun = prompt("Masukkan Tahun Terbit:");
+            if (!tahun) return;
+            const stok = prompt("Masukkan Jumlah Stok:");
+            if (!stok) return;
+
+            daftarBuku.push({ judul, penulis, tahun, stok });
+            localStorage.setItem('dataBuku', JSON.stringify(daftarBuku)); // Simpan ke memori
+            renderTabel();
+        }
+
+        function hapusBuku(index) {
+            if (confirm("Yakin ingin menghapus buku ini?")) {
+                daftarBuku.splice(index, 1);
+                localStorage.setItem('dataBuku', JSON.stringify(daftarBuku));
+                renderTabel();
+            }
+        }
+
+        renderTabel(); // Tampilkan saat halaman dibuka
+    </script>
 </body>
 </html>
