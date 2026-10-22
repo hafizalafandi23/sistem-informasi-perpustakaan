@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Katalog Buku - Anggota</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        body { background-color: #f0f2f5; color: #333; }
+        .navbar { background-color: #1a73e8; color: white; padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; }
+        .navbar h1 { font-size: 18px; }
+        .navbar a { color: white; text-decoration: none; font-size: 14px; font-weight: bold; background: rgba(255,255,255,0.2); padding: 8px 15px; border-radius: 8px; }
+        .navbar a:hover { background: rgba(255,255,255,0.3); }
+        .container { padding: 25px 20px; max-width: 1000px; margin: auto; }
+        .welcome { background: white; padding: 25px; border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); margin-bottom: 30px; }
+        .welcome h2 { color: #1a73e8; margin-bottom: 8px; }
+        .buku-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; }
+        .buku-card { background: white; padding: 20px; border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); display: flex; flex-direction: column; justify-content: space-between; transition: 0.3s; }
+        .buku-card:hover { transform: translateY(-5px); box-shadow: 0 8px 25px rgba(26, 115, 232, 0.15); }
+        .buku-card h4 { color: #1a73e8; margin-bottom: 10px; font-size: 18px; }
+        .buku-card p { font-size: 14px; color: #666; margin-bottom: 5px; }
+        .btn-pinjam { width: 100%; padding: 12px; margin-top: 15px; background-color: #1a73e8; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; transition: 0.3s; }
+        .btn-pinjam:hover { background-color: #1557b0; }
+    </style>
+</head>
+<body>
+
+    <nav class="navbar">
+        <h1>📚 Katalog Buku</h1>
+        <a href="login.html" onclick="logout()">Logout</a>
+    </nav>
+
+    <div class="container">
+        <div class="welcome">
+            <h2 id="sapaan">Selamat Datang, Anggota! 👋</h2>
+            <p>Silakan pilih buku yang ingin Anda pinjam dari katalog di bawah ini.</p>
+        </div>
+
+        <div class="buku-grid" id="katalog-buku">
+            <!-- Data buku akan dimunculkan di sini oleh JavaScript -->
+        </div>
+    </div>
+
+    <script>
+        // 1. Ambil data user yang sedang login untuk sapaan
+        const userLogin = JSON.parse(localStorage.getItem('userLogin'));
+        if (userLogin) {
+            document.getElementById('sapaan').innerText = `Selamat Datang, ${userLogin.nama}! 👋`;
+        } else {
+            // Kalau belum login, tendang balik ke halaman login
+            window.location.href = "login.html";
+        }
+
+        // 2. Ambil data buku dari localStorage (yang diinput oleh Admin)
+        let daftarBuku = JSON.parse(localStorage.getItem('dataBuku')) || [];
+        const container = document.getElementById('katalog-buku');
+
+        if (daftarBuku.length === 0) {
+            container.innerHTML = `<p style="text-align:center; grid-column: 1 / -1; color:#888;">Belum ada buku di perpustakaan. Silakan hubungi Admin.</p>`;
+        } else {
+            daftarBuku.forEach((buku, index) => {
+                container.innerHTML += `
+                    <div class="buku-card">
+                        <div>
+                            <h4>${buku.judul}</h4>
+                            <p>Penulis: ${buku.penulis}</p>
+                            <p>Tahun: ${buku.tahun}</p>
+                            <p>Stok: <b>${buku.stok}</b></p>
+                        </div>
+                        <button class="btn-pinjam" onclick="pinjamBuku('${buku.judul}', ${index})">Pinjam Buku</button>
+                    </div>
+                `;
+            });
+        }
+
+        // 3. Fungsi saat Anggota klik "Pinjam Buku"
+        function pinjamBuku(judul, indexBuku) {
+            // Cek stok dulu
+            if (daftarBuku[indexBuku].stok <= 0) {
+                alert("Maaf, stok buku ini sedang habis.");
+                return;
+            }
+
+            let dataPinjaman = JSON.parse(localStorage.getItem('dataPinjaman')) || [];
+
+            // Simpan data pinjaman dengan nama anggota yang sedang login
+            dataPinjaman.push({
+                nama: userLogin.nama,
+                judul: judul,
+                tglPinjam: new Date().toLocaleDateString('id-ID'),
+                status: "Dipinjam"
+            });
+
+            localStorage.setItem('dataPinjaman', JSON.stringify(dataPinjaman));
+
+            // Kurangi stok buku
+            daftarBuku[indexBuku].stok -= 1;
+            localStorage.setItem('dataBuku', JSON.stringify(daftarBuku));
+
+            alert(`Berhasil! Buku "${judul}" telah diajukan. Silakan cek di halaman Admin.`);
+            
+            // Refresh halaman agar stok langsung berkurang
+            location.reload();
+        }
+
+        // 4. Fungsi Logout
+        function logout() {
+            localStorage.removeItem('userLogin');
+        }
+    </script>
+</body>
+</html>
