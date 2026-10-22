@@ -42,7 +42,7 @@
             <p>Silakan pilih buku yang ingin Anda pinjam dari katalog di bawah ini.</p>
         </div>
 
-        <!-- KOLOM PENCARIAN BARU -->
+        <!-- KOLOM PENCARIAN -->
         <div class="search-box">
             <input type="text" id="input-cari" placeholder="🔍 Cari judul buku atau nama penulis..." onkeyup="cariBuku()">
         </div>
@@ -71,7 +71,6 @@
                 container.innerHTML = `<p style="text-align:center; grid-column: 1 / -1; color:#888;">Buku tidak ditemukan.</p>`;
             } else {
                 dataYangDitampilkan.forEach((buku) => {
-                    // Kita cari index asli buku ini di array utama (untuk keperluan pinjam)
                     const indexAsli = daftarBuku.findIndex(b => b.judul === buku.judul);
                     
                     container.innerHTML += `
@@ -92,7 +91,6 @@
         // FUNGSI PENCARIAN
         function cariBuku() {
             const keyword = document.getElementById('input-cari').value.toLowerCase();
-            // Filter buku berdasarkan judul atau penulis yang cocok dengan keyword
             const hasilPencarian = daftarBuku.filter(buku => 
                 buku.judul.toLowerCase().includes(keyword) || 
                 buku.penulis.toLowerCase().includes(keyword)
@@ -100,28 +98,34 @@
             renderKatalog(hasilPencarian);
         }
 
-        // 3. Fungsi Pinjam Buku (Tetap sama)
+        // 3. Fungsi Pinjam Buku (DENGAN TANGGAL JATUH TEMPO)
         function pinjamBuku(judul, indexBuku) {
             if (daftarBuku[indexBuku].stok <= 0) {
                 alert("Maaf, stok buku ini sedang habis.");
                 return;
             }
 
+            // Hitung tanggal jatuh tempo (7 hari dari sekarang)
+            let hariIni = new Date();
+            let jatuhTempo = new Date();
+            jatuhTempo.setDate(hariIni.getDate() + 7); 
+
             let dataPinjaman = JSON.parse(localStorage.getItem('dataPinjaman')) || [];
             dataPinjaman.push({
                 nama: userLogin.nama,
                 judul: judul,
-                tglPinjam: new Date().toLocaleDateString('id-ID'),
+                tglPinjam: hariIni.toLocaleDateString('id-ID'),
+                tglJatuhTempo: jatuhTempo.toLocaleDateString('id-ID'), // Data Baru
                 status: "Dipinjam"
             });
             localStorage.setItem('dataPinjaman', JSON.stringify(dataPinjaman));
 
+            // Kurangi stok
             daftarBuku[indexBuku].stok -= 1;
             localStorage.setItem('dataBuku', JSON.stringify(daftarBuku));
 
-            alert(`Berhasil! Buku "${judul}" telah diajukan. Silakan cek di halaman Admin.`);
+            alert(`Berhasil! Buku "${judul}" telah diajukan.\nBatas pengembalian: ${jatuhTempo.toLocaleDateString('id-ID')}`);
             
-            // Refresh tampilan
             document.getElementById('input-cari').value = ''; 
             renderKatalog(); 
         }
