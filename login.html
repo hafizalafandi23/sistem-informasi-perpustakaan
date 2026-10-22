@@ -3,123 +3,139 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login - Perpustakaan Digital</title>
+    <title>Login & Daftar - Perpustakaan</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
-        
-        body {
-            /* Background gradasi modern */
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            display: flex; justify-content: center; align-items: center;
-            min-height: 100vh; padding: 20px;
-        }
-
-        .login-container {
-            /* Efek kaca transparan (Glassmorphism) */
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
-            padding: 40px 30px;
-            border-radius: 20px;
-            box-shadow: 0 15px 35px rgba(0,0,0,0.2);
-            width: 100%; max-width: 400px;
-            transition: transform 0.3s ease;
-        }
-
-        .login-container:hover { transform: translateY(-5px); }
-
-        .login-container h1 {
-            text-align: center; color: #333;
-            font-size: 24px; margin-bottom: 5px;
-        }
-
-        .login-container p {
-            text-align: center; color: #777;
-            font-size: 14px; margin-bottom: 30px;
-        }
-
+        body { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); display: flex; justify-content: center; align-items: center; min-height: 100vh; padding: 20px; }
+        .login-container { background: rgba(255, 255, 255, 0.95); padding: 40px 30px; border-radius: 20px; box-shadow: 0 15px 35px rgba(0,0,0,0.2); width: 100%; max-width: 400px; transition: transform 0.3s ease; }
+        .login-container h1 { text-align: center; color: #333; font-size: 24px; margin-bottom: 5px; }
+        .login-container p { text-align: center; color: #777; font-size: 14px; margin-bottom: 30px; }
         .form-group { margin-bottom: 20px; }
-
-        .form-group label {
-            display: block; font-size: 13px; color: #555;
-            margin-bottom: 8px; font-weight: 600;
-        }
-
-        .form-group input, .form-group select {
-            width: 100%; padding: 14px;
-            border: 2px solid #e0e0e0; border-radius: 10px;
-            font-size: 14px; outline: none;
-            transition: all 0.3s ease;
-        }
-
-        .form-group input:focus, .form-group select:focus {
-            border-color: #667eea;
-            box-shadow: 0 0 8px rgba(102, 126, 234, 0.3);
-        }
-
-        .btn-login {
-            width: 100%; padding: 15px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white; border: none; border-radius: 10px;
-            font-size: 16px; font-weight: bold; cursor: pointer;
-            margin-top: 10px; transition: all 0.3s ease;
-        }
-
-        .btn-login:hover {
-            box-shadow: 0 5px 15px rgba(118, 75, 162, 0.4);
-            transform: translateY(-2px);
-        }
-
-        .back-link {
-            display: block; text-align: center;
-            margin-top: 20px; font-size: 13px;
-            color: #667eea; text-decoration: none; font-weight: 600;
-        }
-        .back-link:hover { text-decoration: underline; }
+        .form-group label { display: block; font-size: 13px; color: #555; margin-bottom: 8px; font-weight: 600; }
+        .form-group input, .form-group select { width: 100%; padding: 14px; border: 2px solid #e0e0e0; border-radius: 10px; font-size: 14px; outline: none; transition: all 0.3s ease; }
+        .form-group input:focus, .form-group select:focus { border-color: #667eea; box-shadow: 0 0 8px rgba(102, 126, 234, 0.3); }
+        .btn-login { width: 100%; padding: 15px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border: none; border-radius: 10px; font-size: 16px; font-weight: bold; cursor: pointer; margin-top: 10px; transition: all 0.3s ease; }
+        .btn-login:hover { box-shadow: 0 5px 15px rgba(118, 75, 162, 0.4); transform: translateY(-2px); }
+        .toggle-link { display: block; text-align: center; margin-top: 20px; font-size: 13px; color: #667eea; text-decoration: none; font-weight: 600; cursor: pointer; }
+        .toggle-link:hover { text-decoration: underline; }
+        .hidden { display: none; }
     </style>
 </head>
 <body>
 
     <div class="login-container">
-        <h1>📚 Perpustakaan Digital</h1>
-        <p>Silakan login untuk melanjutkan</p>
+        <!-- FORM LOGIN -->
+        <div id="form-login">
+            <h1>📚 Perpustakaan Digital</h1>
+            <p>Silakan login untuk melanjutkan</p>
+            <form onsubmit="return loginUser(event)">
+                <div class="form-group">
+                    <label for="login-username">Username</label>
+                    <input type="text" id="login-username" placeholder="Masukkan username" required>
+                </div>
+                <div class="form-group">
+                    <label for="login-password">Password</label>
+                    <input type="password" id="login-password" placeholder="Masukkan password" required>
+                </div>
+                <button type="submit" class="btn-login">Login</button>
+            </form>
+            <a class="toggle-link" onclick="toggleForm()">Belum punya akun? Daftar di sini</a>
+        </div>
 
-        <form onsubmit="return loginUser(event)">
-            <div class="form-group">
-                <label for="role">Login Sebagai</label>
-                <select id="role" required>
-                    <option value="">-- Pilih Role --</option>
-                    <option value="admin">Admin (Petugas)</option>
-                    <option value="anggota">Anggota (Siswa/Mahasiswa)</option>
-                </select>
-            </div>
-            <div class="form-group">
-                <label for="username">Username</label>
-                <input type="text" id="username" placeholder="Masukkan username" required>
-            </div>
-            <div class="form-group">
-                <label for="password">Password</label>
-                <input type="password" id="password" placeholder="Masukkan password" required>
-            </div>
-            <button type="submit" class="btn-login">Login</button>
-        </form>
-        <a href="index.html" class="back-link">← Kembali ke Halaman Utama</a>
+        <!-- FORM DAFTAR -->
+        <div id="form-daftar" class="hidden">
+            <h1>📝 Daftar Akun Baru</h1>
+            <p>Silakan isi data diri Anda</p>
+            <form onsubmit="return daftarUser(event)">
+                <div class="form-group">
+                    <label for="daftar-role">Daftar Sebagai</label>
+                    <select id="daftar-role" required>
+                        <option value="">-- Pilih Role --</option>
+                        <option value="admin">Admin (Petugas)</option>
+                        <option value="anggota">Anggota (Siswa/Mahasiswa)</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="daftar-nama">Nama Lengkap</label>
+                    <input type="text" id="daftar-nama" placeholder="Masukkan nama lengkap" required>
+                </div>
+                <div class="form-group">
+                    <label for="daftar-username">Username</label>
+                    <input type="text" id="daftar-username" placeholder="Buat username" required>
+                </div>
+                <div class="form-group">
+                    <label for="daftar-password">Password</label>
+                    <input type="password" id="daftar-password" placeholder="Buat password" required>
+                </div>
+                <button type="submit" class="btn-login">Daftar Sekarang</button>
+            </form>
+            <a class="toggle-link" onclick="toggleForm()">Sudah punya akun? Login di sini</a>
+        </div>
     </div>
 
     <script>
+        // Fungsi untuk ganti tampilan antara Login dan Daftar
+        function toggleForm() {
+            document.getElementById('form-login').classList.toggle('hidden');
+            document.getElementById('form-daftar').classList.toggle('hidden');
+        }
+
+        // 1. FUNGSI DAFTAR (REGISTER)
+        function daftarUser(event) {
+            event.preventDefault();
+            const role = document.getElementById('daftar-role').value;
+            const nama = document.getElementById('daftar-nama').value;
+            const username = document.getElementById('daftar-username').value;
+            const password = document.getElementById('daftar-password').value;
+
+            // Ambil data users dari localStorage, kalau kosong buat array baru
+            let users = JSON.parse(localStorage.getItem('dataUsers')) || [];
+
+            // Cek apakah username sudah dipakai
+            if (users.find(u => u.username === username)) {
+                alert("Username sudah terdaftar! Silakan gunakan username lain.");
+                return;
+            }
+
+            // Simpan user baru
+            users.push({ role, nama, username, password });
+            localStorage.setItem('dataUsers', JSON.stringify(users));
+
+            alert("Pendaftaran berhasil! Silakan login.");
+            
+            // Pindah ke form login dan kosongkan form
+            toggleForm();
+            document.getElementById('daftar-nama').value = '';
+            document.getElementById('daftar-username').value = '';
+            document.getElementById('daftar-password').value = '';
+        }
+
+        // 2. FUNGSI LOGIN
         function loginUser(event) {
             event.preventDefault();
-            const role = document.getElementById('role').value;
-            const username = document.getElementById('username').value;
-            const password = document.getElementById('password').value;
+            const username = document.getElementById('login-username').value;
+            const password = document.getElementById('login-password').value;
 
-            if (username === "admin" && password === "admin123" && role === "admin") {
-                alert("Login berhasil sebagai Admin!");
-                window.location.href = "dashboard.html";
-            } else if (username === "anggota" && password === "anggota123" && role === "anggota") {
-                alert("Login berhasil sebagai Anggota!");
-                window.location.href = "peminjaman.html";
+            // Ambil data users dari localStorage
+            let users = JSON.parse(localStorage.getItem('dataUsers')) || [];
+
+            // Cari user yang cocok
+            const user = users.find(u => u.username === username && u.password === password);
+
+            if (user) {
+                // Simpan status login (siapa yang login)
+                localStorage.setItem('userLogin', JSON.stringify({ nama: user.nama, role: user.role, username: user.username }));
+                
+                alert(`Login berhasil sebagai ${user.role.toUpperCase()}!`);
+                
+                // Arahkan ke halaman yang sesuai
+                if (user.role === 'admin') {
+                    window.location.href = "dashboard.html";
+                } else {
+                    window.location.href = "katalog.html";
+                }
             } else {
-                alert("Login gagal! Periksa username, password, dan role Anda.");
+                alert("Login gagal! Username atau password salah.");
             }
         }
     </script>
