@@ -27,7 +27,6 @@
         .btn-aksi { padding: 6px 12px; border: none; border-radius: 6px; cursor: pointer; font-size: 12px; font-weight: bold; transition: 0.2s; }
         .btn-kembali { background-color: #e8f0fe; color: #1a73e8; }
         .btn-kembali:hover { background-color: #d2e3fc; }
-        .text-denda { color: #dc3545; font-weight: bold; font-size: 13px; display: block; margin-top: 5px; }
     </style>
 </head>
 <body>
@@ -80,7 +79,6 @@
                     ? `<button class="btn-aksi btn-kembali" onclick="prosesKembali(${index})">Proses Kembali</button>`
                     : `<button class="btn-aksi" disabled style="background:#eee; color:#aaa; cursor:not-allowed;">Selesai</button>`;
 
-                // Tampilkan tanggal jatuh tempo (kalau data lama belum ada, tampilkan '-')
                 let tglJatuhTempo = item.tglJatuhTempo ? item.tglJatuhTempo : "-";
 
                 tbody.innerHTML += `
@@ -97,7 +95,6 @@
             });
         }
 
-        // FUNGSI PROSES KEMBALI + HITUNG DENDA
         function prosesKembali(index) {
             let hariIni = new Date();
             let tanggalJatuhTempo = new Date(dataPinjaman[index].tglJatuhTempo);
@@ -105,23 +102,23 @@
             let pesanKonfirmasi = "Proses pengembalian buku ini?";
             let denda = 0;
 
-            // Hitung selisih hari
             if (dataPinjaman[index].tglJatuhTempo) {
+                hariIni.setHours(0,0,0,0);
+                tanggalJatuhTempo.setHours(0,0,0,0);
+
                 let selisihWaktu = hariIni.getTime() - tanggalJatuhTempo.getTime();
                 let selisihHari = Math.ceil(selisihWaktu / (1000 * 3600 * 24));
 
                 if (selisihHari > 0) {
-                    denda = selisihHari * 1000; // Denda Rp 1.000 per hari
+                    denda = selisihHari * 1000; 
                     pesanKonfirmasi = `⚠️ BUKU TERLAMBAT ${selisihHari} HARI!\n\nDenda yang harus dibayar: Rp ${denda.toLocaleString('id-ID')}\n\nApakah denda sudah dibayar dan buku diterima?`;
                 }
             }
 
             if (confirm(pesanKonfirmasi)) {
-                // 1. Ubah status
                 dataPinjaman[index].status = "Dikembalikan";
                 localStorage.setItem('dataPinjaman', JSON.stringify(dataPinjaman));
 
-                // 2. Kembalikan stok buku
                 let daftarBuku = JSON.parse(localStorage.getItem('dataBuku')) || [];
                 let bukuIndex = daftarBuku.findIndex(b => b.judul === dataPinjaman[index].judul);
                 
