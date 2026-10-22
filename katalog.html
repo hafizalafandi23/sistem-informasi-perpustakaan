@@ -3,23 +3,26 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Katalog Buku - Anggota</title>
+    <title>Halaman Anggota - Perpustakaan</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
         body { background-color: #f0f2f5; color: #333; }
-        .navbar { background-color: #1a73e8; color: white; padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; }
+        
+        /* Navbar dengan Menu Tambahan */
+        .navbar { background-color: #1a73e8; color: white; padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 100;}
         .navbar h1 { font-size: 18px; }
-        .navbar a { color: white; text-decoration: none; font-size: 14px; font-weight: bold; background: rgba(255,255,255,0.2); padding: 8px 15px; border-radius: 8px; }
-        .navbar a:hover { background: rgba(255,255,255,0.3); }
+        .nav-links { display: flex; gap: 10px; }
+        .nav-links a { color: white; text-decoration: none; font-size: 14px; font-weight: bold; padding: 8px 15px; border-radius: 8px; cursor: pointer; transition: 0.3s; }
+        .nav-links a:hover, .nav-links a.active { background: rgba(255,255,255,0.3); }
+        
         .container { padding: 25px 20px; max-width: 1000px; margin: auto; }
-        .welcome { background: white; padding: 25px; border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); margin-bottom: 20px; }
-        .welcome h2 { color: #1a73e8; margin-bottom: 8px; }
         
         /* Desain Kolom Pencarian */
         .search-box { background: white; padding: 15px 20px; border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); margin-bottom: 30px; display: flex; }
         .search-box input { flex: 1; padding: 12px 15px; border: 2px solid #e0e0e0; border-radius: 8px; font-size: 15px; outline: none; transition: 0.3s; }
         .search-box input:focus { border-color: #1a73e8; }
 
+        /* Desain Buku Grid */
         .buku-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; }
         .buku-card { background: white; padding: 20px; border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); display: flex; flex-direction: column; justify-content: space-between; transition: 0.3s; }
         .buku-card:hover { transform: translateY(-5px); box-shadow: 0 8px 25px rgba(26, 115, 232, 0.15); }
@@ -27,41 +30,119 @@
         .buku-card p { font-size: 14px; color: #666; margin-bottom: 5px; }
         .btn-pinjam { width: 100%; padding: 12px; margin-top: 15px; background-color: #1a73e8; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; transition: 0.3s; }
         .btn-pinjam:hover { background-color: #1557b0; }
+
+        /* Desain Halaman Riwayat */
+        .riwayat-card { background: white; padding: 20px; border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); margin-bottom: 15px; border-left: 5px solid #1a73e8; }
+        .riwayat-card h4 { color: #333; margin-bottom: 10px; }
+        .riwayat-card p { font-size: 14px; color: #555; margin-bottom: 5px; }
+        .status-badge { display: inline-block; padding: 5px 10px; border-radius: 6px; font-size: 12px; font-weight: bold; margin-top: 10px; }
+        .bg-dipinjam { background-color: #fff3cd; color: #856404; }
+        .bg-kembali { background-color: #d4edda; color: #155724; }
+        .text-telat { color: #dc3545; font-weight: bold; }
+
+        /* Desain Profil */
+        .profil-card { background: white; padding: 30px; border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); text-align: center; max-width: 500px; margin: auto; }
+        .profil-icon { font-size: 60px; margin-bottom: 15px; }
+        .profil-card h3 { color: #1a73e8; margin-bottom: 5px; }
+        .profil-card p { color: #666; font-size: 14px; margin-bottom: 15px; }
+        .profil-data { background: #f8f9fa; padding: 15px; border-radius: 10px; text-align: left; margin-top: 20px; }
+        .profil-data div { display: flex; justify-content: space-between; border-bottom: 1px solid #ddd; padding: 10px 0; font-size: 14px; }
+        .profil-data div:last-child { border-bottom: none; }
+        
+        .hidden { display: none; }
     </style>
 </head>
 <body>
 
     <nav class="navbar">
-        <h1>📚 Katalog Buku</h1>
-        <a href="login.html" onclick="logout()">Logout</a>
+        <h1>📚 Ruang Anggota</h1>
+        <div class="nav-links">
+            <a id="menu-katalog" class="active" onclick="bukaMenu('katalog')">Katalog Buku</a>
+            <a id="menu-riwayat" onclick="bukaMenu('riwayat')">Riwayat Pinjam</a>
+            <a id="menu-profil" onclick="bukaMenu('profil')">Profil Saya</a>
+            <a href="login.html" onclick="logout()" style="background: rgba(220, 53, 69, 0.8);">Logout</a>
+        </div>
     </nav>
 
     <div class="container">
-        <div class="welcome">
-            <h2 id="sapaan">Selamat Datang, Anggota! 👋</h2>
-            <p>Silakan pilih buku yang ingin Anda pinjam dari katalog di bawah ini.</p>
+        <!-- ================= BAGIAN 1: KATALOG BUKU ================= -->
+        <div id="section-katalog">
+            <div class="search-box">
+                <input type="text" id="input-cari" placeholder="🔍 Cari judul buku atau nama penulis..." onkeyup="cariBuku()">
+            </div>
+            <div class="buku-grid" id="katalog-buku">
+                <!-- Data buku akan dimunculkan di sini -->
+            </div>
         </div>
 
-        <!-- KOLOM PENCARIAN -->
-        <div class="search-box">
-            <input type="text" id="input-cari" placeholder="🔍 Cari judul buku atau nama penulis..." onkeyup="cariBuku()">
+        <!-- ================= BAGIAN 2: RIWAYAT PEMINJAMAN ================= -->
+        <div id="section-riwayat" class="hidden">
+            <h2 style="color: #333; margin-bottom: 20px;">Riwayat Peminjaman Buku</h2>
+            <div id="list-riwayat">
+                <!-- Data riwayat akan dimunculkan di sini -->
+            </div>
         </div>
 
-        <div class="buku-grid" id="katalog-buku">
-            <!-- Data buku akan dimunculkan di sini oleh JavaScript -->
+        <!-- ================= BAGIAN 3: PROFIL ANGGOTA ================= -->
+        <div id="section-profil" class="hidden">
+            <div class="profil-card">
+                <div class="profil-icon">👤</div>
+                <h3 id="profil-nama">Nama Anggota</h3>
+                <p id="profil-role">Role</p>
+                
+                <div class="profil-data">
+                    <div>
+                        <span style="font-weight: bold; color: #555;">Username</span>
+                        <span id="profil-username">-</span>
+                    </div>
+                    <div>
+                        <span style="font-weight: bold; color: #555;">Status Akun</span>
+                        <span style="color: green; font-weight: bold;">Aktif</span>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 
     <script>
-        // 1. Ambil data user yang sedang login
+        // --- 1. SETUP USER LOGIN ---
         const userLogin = JSON.parse(localStorage.getItem('userLogin'));
-        if (userLogin) {
-            document.getElementById('sapaan').innerText = `Selamat Datang, ${userLogin.nama}! 👋`;
-        } else {
+        if (!userLogin) {
             window.location.href = "login.html";
         }
 
-        // 2. Ambil data buku dari localStorage
+        // Isi data profil di halaman
+        document.getElementById('profil-nama').innerText = userLogin.nama;
+        document.getElementById('profil-role').innerText = userLogin.role === 'anggota' ? 'Anggota Perpustakaan' : 'Administrator';
+        document.getElementById('profil-username').innerText = userLogin.username;
+
+        // --- 2. FUNGSI NAVIGASI MENU (Sembunyikan/Tampilkan Halaman) ---
+        function bukaMenu(menu) {
+            // Sembunyikan semua section
+            document.getElementById('section-katalog').classList.add('hidden');
+            document.getElementById('section-riwayat').classList.add('hidden');
+            document.getElementById('section-profil').classList.add('hidden');
+
+            // Hapus warna active dari semua menu
+            document.getElementById('menu-katalog').classList.remove('active');
+            document.getElementById('menu-riwayat').classList.remove('active');
+            document.getElementById('menu-profil').classList.remove('active');
+
+            // Tampilkan yang dipilih
+            if (menu === 'katalog') {
+                document.getElementById('section-katalog').classList.remove('hidden');
+                document.getElementById('menu-katalog').classList.add('active');
+            } else if (menu === 'riwayat') {
+                document.getElementById('section-riwayat').classList.remove('hidden');
+                document.getElementById('menu-riwayat').classList.add('active');
+                renderRiwayat(); // Panggil data riwayat
+            } else if (menu === 'profil') {
+                document.getElementById('section-profil').classList.remove('hidden');
+                document.getElementById('menu-profil').classList.add('active');
+            }
+        }
+
+        // --- 3. DATA BUKU & KATALOG ---
         let daftarBuku = JSON.parse(localStorage.getItem('dataBuku')) || [];
         const container = document.getElementById('katalog-buku');
 
@@ -72,7 +153,6 @@
             } else {
                 dataYangDitampilkan.forEach((buku) => {
                     const indexAsli = daftarBuku.findIndex(b => b.judul === buku.judul);
-                    
                     container.innerHTML += `
                         <div class="buku-card">
                             <div>
@@ -88,7 +168,6 @@
             }
         }
 
-        // FUNGSI PENCARIAN
         function cariBuku() {
             const keyword = document.getElementById('input-cari').value.toLowerCase();
             const hasilPencarian = daftarBuku.filter(buku => 
@@ -98,14 +177,12 @@
             renderKatalog(hasilPencarian);
         }
 
-        // 3. Fungsi Pinjam Buku (DENGAN TANGGAL JATUH TEMPO)
         function pinjamBuku(judul, indexBuku) {
             if (daftarBuku[indexBuku].stok <= 0) {
                 alert("Maaf, stok buku ini sedang habis.");
                 return;
             }
 
-            // Hitung tanggal jatuh tempo (7 hari dari sekarang)
             let hariIni = new Date();
             let jatuhTempo = new Date();
             jatuhTempo.setDate(hariIni.getDate() + 7); 
@@ -115,25 +192,72 @@
                 nama: userLogin.nama,
                 judul: judul,
                 tglPinjam: hariIni.toLocaleDateString('id-ID'),
-                tglJatuhTempo: jatuhTempo.toLocaleDateString('id-ID'), // Data Baru
+                tglJatuhTempo: jatuhTempo.toLocaleDateString('id-ID'),
                 status: "Dipinjam"
             });
             localStorage.setItem('dataPinjaman', JSON.stringify(dataPinjaman));
 
-            // Kurangi stok
             daftarBuku[indexBuku].stok -= 1;
             localStorage.setItem('dataBuku', JSON.stringify(daftarBuku));
 
-            alert(`Berhasil! Buku "${judul}" telah diajukan.\nBatas pengembalian: ${jatuhTempo.toLocaleDateString('id-ID')}`);
-            
+            alert(`Berhasil! Buku "${judul}" diajukan.\nBatas pengembalian: ${jatuhTempo.toLocaleDateString('id-ID')}`);
             document.getElementById('input-cari').value = ''; 
             renderKatalog(); 
+        }
+
+        // --- 4. DATA & FUNGSI RIWAYAT PEMINJAMAN ANGGOTA ---
+        function renderRiwayat() {
+            const listRiwayat = document.getElementById('list-riwayat');
+            let semuaPinjaman = JSON.parse(localStorage.getItem('dataPinjaman')) || [];
+            
+            // Filter hanya pinjaman milik Anggota yang sedang login
+            let riwayatSaya = semuaPinjaman.filter(p => p.nama === userLogin.nama);
+
+            if (riwayatSaya.length === 0) {
+                listRiwayat.innerHTML = `<div class="riwayat-card"><p style="text-align:center; color:#888;">Anda belum pernah meminjam buku.</p></div>`;
+                return;
+            }
+
+            listRiwayat.innerHTML = '';
+            
+            // Urutkan dari yang terbaru
+            riwayatSaya.reverse().forEach(item => {
+                let badgeClass = item.status === 'Dipinjam' ? 'bg-dipinjam' : 'bg-kembali';
+                let infoWaktu = '';
+
+                // Hitung sisa hari jika masih dipinjam
+                if (item.status === 'Dipinjam' && item.tglJatuhTempo) {
+                    let hariIni = new Date();
+                    let jatuhTempo = new Date(item.tglJatuhTempo);
+                    let selisihWaktu = jatuhTempo.getTime() - hariIni.getTime();
+                    let selisihHari = Math.ceil(selisihWaktu / (1000 * 3600 * 24));
+
+                    if (selisihHari < 0) {
+                        infoWaktu = `<p class="text-telat">⚠️ Terlambat ${Math.abs(selisihHari)} hari!</p>`;
+                    } else if (selisihHari === 0) {
+                        infoWaktu = `<p class="text-telat">⚠️ Jatuh tempo HARI INI!</p>`;
+                    } else {
+                        infoWaktu = `<p style="color: #28a745;">Sisa waktu: ${selisihHari} hari lagi.</p>`;
+                    }
+                }
+
+                listRiwayat.innerHTML += `
+                    <div class="riwayat-card">
+                        <h4>📖 ${item.judul}</h4>
+                        <p>Tgl Pinjam: ${item.tglPinjam}</p>
+                        <p>Jatuh Tempo: ${item.tglJatuhTempo || '-'}</p>
+                        ${infoWaktu}
+                        <div class="status-badge ${badgeClass}">${item.status}</div>
+                    </div>
+                `;
+            });
         }
 
         function logout() {
             localStorage.removeItem('userLogin');
         }
 
+        // Jalankan render katalog saat pertama kali halaman dibuka
         renderKatalog();
     </script>
 </body>
