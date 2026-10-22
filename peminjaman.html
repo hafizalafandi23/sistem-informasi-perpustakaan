@@ -3,66 +3,90 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Katalog Buku - Anggota</title>
+    <title>Data Peminjaman - Admin</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
         body { background-color: #f0f2f5; color: #333; }
-        .navbar { background-color: #1a73e8; color: white; padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; }
-        .navbar h1 { font-size: 18px; }
-        .navbar a { color: white; text-decoration: none; font-size: 14px; }
+        .navbar { background-color: #ffffff; padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 10px rgba(0,0,0,0.05); position: sticky; top: 0; z-index: 100; }
+        .navbar h1 { font-size: 18px; color: #1a73e8; }
+        .navbar a { color: #1a73e8; text-decoration: none; font-size: 14px; font-weight: bold; padding: 8px 15px; border-radius: 8px; background-color: #e8f0fe; transition: 0.3s; }
+        .navbar a:hover { background-color: #d2e3fc; }
         .container { padding: 25px 20px; max-width: 1000px; margin: auto; }
-        .welcome { background: white; padding: 25px; border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); margin-bottom: 30px; }
-        .welcome h2 { color: #1a73e8; margin-bottom: 8px; }
-        .buku-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; }
-        .buku-card { background: white; padding: 20px; border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); display: flex; flex-direction: column; justify-content: space-between; transition: 0.3s; }
-        .buku-card:hover { transform: translateY(-5px); box-shadow: 0 8px 25px rgba(26, 115, 232, 0.15); }
-        .buku-card h4 { color: #1a73e8; margin-bottom: 10px; font-size: 18px; }
-        .buku-card p { font-size: 14px; color: #666; margin-bottom: 5px; }
-        .btn-pinjam { width: 100%; padding: 12px; margin-top: 15px; background-color: #1a73e8; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; transition: 0.3s; }
-        .btn-pinjam:hover { background-color: #1557b0; }
+        .header-actions { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+        .header-actions h2 { color: #333; font-size: 22px; }
+        .btn-tambah { background-color: #1a73e8; color: white; padding: 10px 18px; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; font-size: 14px; box-shadow: 0 4px 10px rgba(26, 115, 232, 0.3); transition: all 0.3s ease; }
+        .btn-tambah:hover { background-color: #1557b0; transform: translateY(-2px); }
+        .table-container { background: white; border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); overflow-x: auto; }
+        table { width: 100%; border-collapse: collapse; }
+        th, td { padding: 15px; text-align: left; font-size: 14px; }
+        th { background-color: #f8f9fa; color: #555; font-weight: 600; border-bottom: 2px solid #eaeaea; }
+        td { border-bottom: 1px solid #eaeaea; color: #444; }
+        tr:last-child td { border-bottom: none; }
+        tr:hover td { background-color: #f9fbff; }
+        .badge { padding: 5px 10px; border-radius: 6px; font-size: 12px; font-weight: bold; }
+        .badge-dipinjam { background-color: #fff3cd; color: #856404; }
+        .badge-kembali { background-color: #d4edda; color: #155724; }
+        .btn-aksi { padding: 6px 12px; border: none; border-radius: 6px; cursor: pointer; font-size: 12px; font-weight: bold; transition: 0.2s; }
+        .btn-kembali { background-color: #e8f0fe; color: #1a73e8; }
+        .btn-kembali:hover { background-color: #d2e3fc; }
     </style>
 </head>
 <body>
 
     <nav class="navbar">
-        <h1>📚 Katalog Buku</h1>
-        <a href="login.html">Logout</a>
+        <h1>📋 Data Peminjaman (Admin)</h1>
+        <a href="dashboard.html">← Kembali ke Dashboard</a>
     </nav>
 
     <div class="container">
-        <div class="welcome">
-            <h2>Selamat Datang, Anggota! 👋</h2>
-            <p>Silakan pilih buku yang ingin Anda pinjam dari katalog di bawah ini.</p>
+        <div class="header-actions">
+            <h2>Daftar Transaksi Peminjaman</h2>
+            <button class="btn-tambah" onclick="alert('Fitur tambah peminjaman manual akan segera hadir!')">+ Pinjam Baru</button>
         </div>
 
-        <div class="buku-grid">
-            <div class="buku-card">
-                <div>
-                    <h4>Belajar Pemrograman Web</h4>
-                    <p>Penulis: Budi Raharjo</p>
-                    <p>Tahun: 2023</p>
-                    <p>Stok: 5</p>
-                </div>
-                <button class="btn-pinjam" onclick="alert('Pengajuan pinjam berhasil! Silakan ambil buku di meja admin.')">Pinjam Buku</button>
-            </div>
-            <div class="buku-card">
-                <div>
-                    <h4>Rancangan Perangkat Lunak</h4>
-                    <p>Penulis: Sri Mulyani</p>
-                    <p>Tahun: 2022</p>
-                    <p>Stok: 3</p>
-                </div>
-                <button class="btn-pinjam" onclick="alert('Pengajuan pinjam berhasil! Silakan ambil buku di meja admin.')">Pinjam Buku</button>
-            </div>
-            <div class="buku-card">
-                <div>
-                    <h4>Algoritma dan Struktur Data</h4>
-                    <p>Penulis: Rinaldi Munir</p>
-                    <p>Tahun: 2021</p>
-                    <p>Stok: 2</p>
-                </div>
-                <button class="btn-pinjam" onclick="alert('Pengajuan pinjam berhasil! Silakan ambil buku di meja admin.')">Pinjam Buku</button>
-            </div>
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>No</th>
+                        <th>Nama Peminjam</th>
+                        <th>Judul Buku</th>
+                        <th>Tgl Pinjam</th>
+                        <th>Jatuh Tempo</th>
+                        <th>Status</th>
+                        <th>Aksi</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>1</td>
+                        <td>Hafiz Al Afandi</td>
+                        <td>Belajar Pemrograman Web</td>
+                        <td>20 Okt 2026</td>
+                        <td>27 Okt 2026</td>
+                        <td><span class="badge badge-dipinjam">Dipinjam</span></td>
+                        <td><button class="btn-aksi btn-kembali" onclick="alert('Buku berhasil dikembalikan!')">Proses Kembali</button></td>
+                    </tr>
+                    <tr>
+                        <td>2</td>
+                        <td>Farid Ridho</td>
+                        <td>Rancangan Perangkat Lunak</td>
+                        <td>18 Okt 2026</td>
+                        <td>25 Okt 2026</td>
+                        <td><span class="badge badge-kembali">Dikembalikan</span></td>
+                        <td><button class="btn-aksi btn-kembali" disabled style="background:#eee; color:#aaa; cursor:not-allowed;">Selesai</button></td>
+                    </tr>
+                    <tr>
+                        <td>3</td>
+                        <td>Naufal Ahmad Firdaus</td>
+                        <td>Algoritma dan Struktur Data</td>
+                        <td>21 Okt 2026</td>
+                        <td>28 Okt 2026</td>
+                        <td><span class="badge badge-dipinjam">Dipinjam</span></td>
+                        <td><button class="btn-aksi btn-kembali" onclick="alert('Buku berhasil dikembalikan!')">Proses Kembali</button></td>
+                    </tr>
+                </tbody>
+            </table>
         </div>
     </div>
 
