@@ -116,26 +116,35 @@
         document.getElementById('profil-role').innerText = userLogin.role === 'anggota' ? 'Anggota Perpustakaan' : 'Administrator';
         document.getElementById('profil-username').innerText = userLogin.username;
 
-        // --- 2. FUNGSI NAVIGASI MENU (Sembunyikan/Tampilkan Halaman) ---
+        // --- FUNGSI FORMAT TANGGAL (Agar tidak NaN) ---
+        const formatTanggal = (date) => {
+            let d = new Date(date),
+                month = '' + (d.getMonth() + 1),
+                day = '' + d.getDate(),
+                year = d.getFullYear();
+
+            if (month.length < 2) month = '0' + month;
+            if (day.length < 2) day = '0' + day;
+            return [year, month, day].join('-');
+        };
+
+        // --- 2. FUNGSI NAVIGASI MENU ---
         function bukaMenu(menu) {
-            // Sembunyikan semua section
             document.getElementById('section-katalog').classList.add('hidden');
             document.getElementById('section-riwayat').classList.add('hidden');
             document.getElementById('section-profil').classList.add('hidden');
 
-            // Hapus warna active dari semua menu
             document.getElementById('menu-katalog').classList.remove('active');
             document.getElementById('menu-riwayat').classList.remove('active');
             document.getElementById('menu-profil').classList.remove('active');
 
-            // Tampilkan yang dipilih
             if (menu === 'katalog') {
                 document.getElementById('section-katalog').classList.remove('hidden');
                 document.getElementById('menu-katalog').classList.add('active');
             } else if (menu === 'riwayat') {
                 document.getElementById('section-riwayat').classList.remove('hidden');
                 document.getElementById('menu-riwayat').classList.add('active');
-                renderRiwayat(); // Panggil data riwayat
+                renderRiwayat(); 
             } else if (menu === 'profil') {
                 document.getElementById('section-profil').classList.remove('hidden');
                 document.getElementById('menu-profil').classList.add('active');
@@ -191,8 +200,8 @@
             dataPinjaman.push({
                 nama: userLogin.nama,
                 judul: judul,
-                tglPinjam: hariIni.toLocaleDateString('id-ID'),
-                tglJatuhTempo: jatuhTempo.toLocaleDateString('id-ID'),
+                tglPinjam: formatTanggal(hariIni), 
+                tglJatuhTempo: formatTanggal(jatuhTempo),
                 status: "Dipinjam"
             });
             localStorage.setItem('dataPinjaman', JSON.stringify(dataPinjaman));
@@ -200,7 +209,7 @@
             daftarBuku[indexBuku].stok -= 1;
             localStorage.setItem('dataBuku', JSON.stringify(daftarBuku));
 
-            alert(`Berhasil! Buku "${judul}" diajukan.\nBatas pengembalian: ${jatuhTempo.toLocaleDateString('id-ID')}`);
+            alert(`Berhasil! Buku "${judul}" diajukan.\nBatas pengembalian: ${formatTanggal(jatuhTempo)}`);
             document.getElementById('input-cari').value = ''; 
             renderKatalog(); 
         }
@@ -209,8 +218,6 @@
         function renderRiwayat() {
             const listRiwayat = document.getElementById('list-riwayat');
             let semuaPinjaman = JSON.parse(localStorage.getItem('dataPinjaman')) || [];
-            
-            // Filter hanya pinjaman milik Anggota yang sedang login
             let riwayatSaya = semuaPinjaman.filter(p => p.nama === userLogin.nama);
 
             if (riwayatSaya.length === 0) {
@@ -219,16 +226,15 @@
             }
 
             listRiwayat.innerHTML = '';
-            
-            // Urutkan dari yang terbaru
             riwayatSaya.reverse().forEach(item => {
                 let badgeClass = item.status === 'Dipinjam' ? 'bg-dipinjam' : 'bg-kembali';
                 let infoWaktu = '';
 
-                // Hitung sisa hari jika masih dipinjam
                 if (item.status === 'Dipinjam' && item.tglJatuhTempo) {
                     let hariIni = new Date();
+                    hariIni.setHours(0,0,0,0); // Reset jam
                     let jatuhTempo = new Date(item.tglJatuhTempo);
+                    
                     let selisihWaktu = jatuhTempo.getTime() - hariIni.getTime();
                     let selisihHari = Math.ceil(selisihWaktu / (1000 * 3600 * 24));
 
@@ -257,7 +263,6 @@
             localStorage.removeItem('userLogin');
         }
 
-        // Jalankan render katalog saat pertama kali halaman dibuka
         renderKatalog();
     </script>
 </body>
