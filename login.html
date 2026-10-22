@@ -12,8 +12,8 @@
         .login-container p { text-align: center; color: #777; font-size: 14px; margin-bottom: 30px; }
         .form-group { margin-bottom: 20px; }
         .form-group label { display: block; font-size: 13px; color: #555; margin-bottom: 8px; font-weight: 600; }
-        .form-group input, .form-group select { width: 100%; padding: 14px; border: 2px solid #e0e0e0; border-radius: 10px; font-size: 14px; outline: none; transition: all 0.3s ease; }
-        .form-group input:focus, .form-group select:focus { border-color: #667eea; box-shadow: 0 0 8px rgba(102, 126, 234, 0.3); }
+        .form-group input { width: 100%; padding: 14px; border: 2px solid #e0e0e0; border-radius: 10px; font-size: 14px; outline: none; transition: all 0.3s ease; }
+        .form-group input:focus { border-color: #667eea; box-shadow: 0 0 8px rgba(102, 126, 234, 0.3); }
         .btn-login { width: 100%; padding: 15px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border: none; border-radius: 10px; font-size: 16px; font-weight: bold; cursor: pointer; margin-top: 10px; transition: all 0.3s ease; }
         .btn-login:hover { box-shadow: 0 5px 15px rgba(118, 75, 162, 0.4); transform: translateY(-2px); }
         .toggle-link { display: block; text-align: center; margin-top: 20px; font-size: 13px; color: #667eea; text-decoration: none; font-weight: 600; cursor: pointer; }
@@ -39,22 +39,14 @@
                 </div>
                 <button type="submit" class="btn-login">Login</button>
             </form>
-            <a class="toggle-link" onclick="toggleForm()">Belum punya akun? Daftar di sini</a>
+            <a class="toggle-link" onclick="toggleForm()">Belum punya akun? Daftar sebagai Anggota di sini</a>
         </div>
 
-        <!-- FORM DAFTAR -->
+        <!-- FORM DAFTAR (HANYA ANGGOTA) -->
         <div id="form-daftar" class="hidden">
-            <h1>📝 Daftar Akun Baru</h1>
+            <h1>📝 Daftar Anggota Baru</h1>
             <p>Silakan isi data diri Anda</p>
             <form onsubmit="return daftarUser(event)">
-                <div class="form-group">
-                    <label for="daftar-role">Daftar Sebagai</label>
-                    <select id="daftar-role" required>
-                        <option value="">-- Pilih Role --</option>
-                        <option value="admin">Admin (Petugas)</option>
-                        <option value="anggota">Anggota (Siswa/Mahasiswa)</option>
-                    </select>
-                </div>
                 <div class="form-group">
                     <label for="daftar-nama">Nama Lengkap</label>
                     <input type="text" id="daftar-nama" placeholder="Masukkan nama lengkap" required>
@@ -74,61 +66,57 @@
     </div>
 
     <script>
-        // Fungsi untuk ganti tampilan antara Login dan Daftar
+        // --- SETUP AKUN ADMIN BAWAAN SISTEM ---
+        let users = JSON.parse(localStorage.getItem('dataUsers')) || [];
+        if (!users.find(u => u.username === 'admin')) {
+            users.push({ role: 'admin', nama: 'Administrator', username: 'admin', password: 'admin123' });
+            localStorage.setItem('dataUsers', JSON.stringify(users));
+        }
+
         function toggleForm() {
             document.getElementById('form-login').classList.toggle('hidden');
             document.getElementById('form-daftar').classList.toggle('hidden');
         }
 
-        // 1. FUNGSI DAFTAR (REGISTER)
+        // FUNGSI DAFTAR (Otomatis Role: Anggota)
         function daftarUser(event) {
             event.preventDefault();
-            const role = document.getElementById('daftar-role').value;
             const nama = document.getElementById('daftar-nama').value;
             const username = document.getElementById('daftar-username').value;
             const password = document.getElementById('daftar-password').value;
 
-            // Ambil data users dari localStorage, kalau kosong buat array baru
             let users = JSON.parse(localStorage.getItem('dataUsers')) || [];
 
-            // Cek apakah username sudah dipakai
             if (users.find(u => u.username === username)) {
                 alert("Username sudah terdaftar! Silakan gunakan username lain.");
                 return;
             }
 
-            // Simpan user baru
-            users.push({ role, nama, username, password });
+            // Simpan user baru dengan role 'anggota' otomatis
+            users.push({ role: 'anggota', nama, username, password });
             localStorage.setItem('dataUsers', JSON.stringify(users));
 
-            alert("Pendaftaran berhasil! Silakan login.");
+            alert("Pendaftaran Anggota berhasil! Silakan login.");
             
-            // Pindah ke form login dan kosongkan form
             toggleForm();
             document.getElementById('daftar-nama').value = '';
             document.getElementById('daftar-username').value = '';
             document.getElementById('daftar-password').value = '';
         }
 
-        // 2. FUNGSI LOGIN
+        // FUNGSI LOGIN
         function loginUser(event) {
             event.preventDefault();
             const username = document.getElementById('login-username').value;
             const password = document.getElementById('login-password').value;
 
-            // Ambil data users dari localStorage
             let users = JSON.parse(localStorage.getItem('dataUsers')) || [];
-
-            // Cari user yang cocok
             const user = users.find(u => u.username === username && u.password === password);
 
             if (user) {
-                // Simpan status login (siapa yang login)
                 localStorage.setItem('userLogin', JSON.stringify({ nama: user.nama, role: user.role, username: user.username }));
-                
                 alert(`Login berhasil sebagai ${user.role.toUpperCase()}!`);
                 
-                // Arahkan ke halaman yang sesuai
                 if (user.role === 'admin') {
                     window.location.href = "dashboard.html";
                 } else {
