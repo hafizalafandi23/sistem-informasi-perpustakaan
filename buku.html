@@ -17,14 +17,14 @@
         .btn-tambah { background-color: #1a73e8; color: white; padding: 10px 18px; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; font-size: 14px; box-shadow: 0 4px 10px rgba(26, 115, 232, 0.3); transition: all 0.3s ease; }
         .btn-tambah:hover { background-color: #1557b0; transform: translateY(-2px); }
         
-        /* Desain Form Tambah Buku */
-        .form-tambah {
+        /* Form Tambah/Edit Buku */
+        .form-buku {
             background: white; padding: 20px; border-radius: 15px;
             box-shadow: 0 4px 15px rgba(0,0,0,0.05); margin-bottom: 20px;
-            display: none; /* Sembunyikan secara default */
+            display: none; 
         }
-        .form-tambah.active { display: block; } /* Tampilkan jika aktif */
-        .form-tambah h3 { margin-bottom: 15px; color: #333; font-size: 18px; }
+        .form-buku.active { display: block; } 
+        .form-buku h3 { margin-bottom: 15px; color: #333; font-size: 18px; }
         .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 15px; }
         .form-group label { display: block; font-size: 13px; margin-bottom: 5px; color: #555; font-weight: 600; }
         .form-group input { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 8px; font-size: 14px; }
@@ -40,7 +40,10 @@
         td { border-bottom: 1px solid #eaeaea; color: #444; }
         tr:last-child td { border-bottom: none; }
         tr:hover td { background-color: #f9fbff; }
-        .btn-aksi { padding: 6px 12px; border: none; border-radius: 6px; cursor: pointer; font-size: 12px; font-weight: bold; transition: 0.2s; }
+        
+        .btn-aksi { padding: 6px 12px; border: none; border-radius: 6px; cursor: pointer; font-size: 12px; font-weight: bold; transition: 0.2s; margin-right: 5px; }
+        .btn-edit { background-color: #fff3cd; color: #856404; }
+        .btn-edit:hover { background-color: #ffeeba; }
         .btn-hapus { background-color: #f8d7da; color: #721c24; }
         .btn-hapus:hover { background-color: #f5c6cb; }
     </style>
@@ -55,12 +58,12 @@
     <div class="container">
         <div class="header-actions">
             <h2>Daftar Buku Perpustakaan</h2>
-            <button class="btn-tambah" onclick="tampilkanForm()">+ Tambah Buku</button>
+            <button class="btn-tambah" onclick="bukaFormTambah()">+ Tambah Buku</button>
         </div>
 
-        <!-- Form Tambah Buku (Tersembunyi di awal) -->
-        <div id="form-tambah-buku" class="form-tambah">
-            <h3>Form Tambah Buku Baru</h3>
+        <!-- Form Tambah/Edit Buku -->
+        <div id="form-buku" class="form-buku">
+            <h3 id="judul-form">Form Tambah Buku Baru</h3>
             <div class="form-grid">
                 <div class="form-group">
                     <label>Judul Buku</label>
@@ -80,7 +83,7 @@
                 </div>
             </div>
             <button class="btn-simpan" onclick="simpanBuku()">Simpan Buku</button>
-            <button class="btn-batal" onclick="tampilkanForm()">Batal</button>
+            <button class="btn-batal" onclick="tutupForm()">Batal</button>
         </div>
 
         <div class="table-container">
@@ -104,13 +107,14 @@
 
     <script>
         let daftarBuku = JSON.parse(localStorage.getItem('dataBuku')) || [];
+        let indexEdit = -1; // Menyimpan index buku yang sedang diedit (-1 artinya tambah baru)
 
         function renderTabel() {
             const tbody = document.getElementById('tabel-buku');
             tbody.innerHTML = '';
 
             if (daftarBuku.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="6" style="text-align:center; padding: 20px;">Belum ada data buku. Silakan klik "+ Tambah Buku".</td></tr>`;
+                tbody.innerHTML = `<tr><td colspan="6" style="text-align:center; padding: 20px;">Belum ada data buku.</td></tr>`;
                 return;
             }
 
@@ -122,19 +126,46 @@
                         <td>${buku.penulis}</td>
                         <td>${buku.tahun}</td>
                         <td>${buku.stok}</td>
-                        <td><button class="btn-aksi btn-hapus" onclick="hapusBuku(${index})">Hapus</button></td>
+                        <td>
+                            <button class="btn-aksi btn-edit" onclick="bukaFormEdit(${index})">Edit</button>
+                            <button class="btn-aksi btn-hapus" onclick="hapusBuku(${index})">Hapus</button>
+                        </td>
                     </tr>
                 `;
             });
         }
 
-        // Fungsi untuk memunculkan/menyembunyikan form
-        function tampilkanForm() {
-            const form = document.getElementById('form-tambah-buku');
-            form.classList.toggle('active');
+        // FUNGSI UNTUK MEMBUKA FORM (TAMBAH BARU)
+        function bukaFormTambah() {
+            indexEdit = -1; // Reset index edit
+            document.getElementById('judul-form').innerText = "Form Tambah Buku Baru";
+            document.getElementById('input-judul').value = '';
+            document.getElementById('input-penulis').value = '';
+            document.getElementById('input-tahun').value = '';
+            document.getElementById('input-stok').value = '';
+            document.getElementById('form-buku').classList.add('active');
         }
 
-        // Fungsi untuk menyimpan buku dari form
+        // FUNGSI UNTUK MEMBUKA FORM (EDIT)
+        function bukaFormEdit(index) {
+            indexEdit = index; // Simpan index yang mau diedit
+            document.getElementById('judul-form').innerText = "Edit Data Buku";
+            
+            // Isi form dengan data yang mau diedit
+            document.getElementById('input-judul').value = daftarBuku[index].judul;
+            document.getElementById('input-penulis').value = daftarBuku[index].penulis;
+            document.getElementById('input-tahun').value = daftarBuku[index].tahun;
+            document.getElementById('input-stok').value = daftarBuku[index].stok;
+            
+            document.getElementById('form-buku').classList.add('active');
+        }
+
+        // FUNGSI UNTUK MENUTUP FORM
+        function tutupForm() {
+            document.getElementById('form-buku').classList.remove('active');
+        }
+
+        // FUNGSI SIMPAN (Bisa untuk Tambah Baru atau Simpan Hasil Edit)
         function simpanBuku() {
             const judul = document.getElementById('input-judul').value;
             const penulis = document.getElementById('input-penulis').value;
@@ -146,17 +177,17 @@
                 return;
             }
 
-            daftarBuku.push({ judul, penulis, tahun, stok });
-            localStorage.setItem('dataBuku', JSON.stringify(daftarBuku));
-            
-            // Kosongkan form dan sembunyikan
-            document.getElementById('input-judul').value = '';
-            document.getElementById('input-penulis').value = '';
-            document.getElementById('input-tahun').value = '';
-            document.getElementById('input-stok').value = '';
-            tampilkanForm();
+            if (indexEdit === -1) {
+                // Kalau indexEdit -1, berarti TAMBAH BARU
+                daftarBuku.push({ judul, penulis, tahun, stok });
+            } else {
+                // Kalau indexEdit bukan -1, berarti EDIT data yang sudah ada
+                daftarBuku[indexEdit] = { judul, penulis, tahun, stok };
+            }
 
-            renderTabel(); // Refresh tabel
+            localStorage.setItem('dataBuku', JSON.stringify(daftarBuku));
+            tutupForm();
+            renderTabel(); 
         }
 
         function hapusBuku(index) {
