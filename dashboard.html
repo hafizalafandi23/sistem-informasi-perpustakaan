@@ -3,98 +3,51 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard Admin - Perpustakaan</title>
+    <title>Dashboard Admin</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
-        body { background-color: #f0f2f5; color: #333; }
-        .navbar { background-color: #ffffff; padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 10px rgba(0,0,0,0.05); position: sticky; top: 0; z-index: 100; }
+        body { background-color: #f0f2f5; }
+        .navbar { background-color: #fff; padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
         .navbar h1 { font-size: 18px; color: #1a73e8; }
-        .navbar a { color: #dc3545; text-decoration: none; font-size: 14px; font-weight: bold; padding: 8px 15px; border-radius: 8px; background-color: #ffebee; transition: 0.3s; }
-        .navbar a:hover { background-color: #ffcdd2; }
+        .navbar a { color: #dc3545; text-decoration: none; font-weight: bold; background: #ffebee; padding: 8px 15px; border-radius: 8px; }
         .container { padding: 25px 20px; max-width: 1000px; margin: auto; }
-        .stats-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 15px; margin-bottom: 30px; }
+        .stats-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 15px; margin-bottom: 30px; }
         .stat-box { background: white; padding: 20px; border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); text-align: center; border-left: 5px solid #1a73e8; }
-        .stat-box h2 { font-size: 28px; color: #1a73e8; margin-bottom: 5px; }
+        .stat-box h2 { font-size: 28px; color: #1a73e8; }
         .stat-box p { font-size: 13px; color: #777; font-weight: 600; }
-        .welcome { background: white; padding: 25px; border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); margin-bottom: 30px; }
-        .welcome h2 { color: #333; margin-bottom: 8px; font-size: 22px; }
-        .welcome p { color: #666; font-size: 14px; }
-        .section-title { margin-bottom: 15px; color: #333; font-size: 18px; }
         .menu-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 20px; }
-        .menu-card { background: white; padding: 25px 20px; border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); text-align: center; text-decoration: none; color: #333; transition: all 0.3s ease; border: 1px solid transparent; }
-        .menu-card:hover { transform: translateY(-5px); box-shadow: 0 8px 25px rgba(26, 115, 232, 0.15); border-color: #1a73e8; }
-        .menu-card .icon { font-size: 40px; margin-bottom: 15px; }
+        .menu-card { background: white; padding: 25px; border-radius: 15px; text-align: center; text-decoration: none; color: #333; transition: 0.3s; box-shadow: 0 4px 15px rgba(0,0,0,0.05); }
+        .menu-card:hover { transform: translateY(-5px); box-shadow: 0 8px 25px rgba(26, 115, 232, 0.15); }
+        .menu-card .icon { font-size: 40px; margin-bottom: 10px; }
         .menu-card h3 { font-size: 16px; color: #1a73e8; }
     </style>
 </head>
 <body>
-
     <nav class="navbar">
         <h1>📚 Dashboard Admin</h1>
         <a href="login.html" onclick="logout()">Logout</a>
     </nav>
-
     <div class="container">
         <div class="stats-grid">
-            <div class="stat-box">
-                <h2 id="total-buku">0</h2>
-                <p>Total Buku</p>
-            </div>
-            <div class="stat-box" style="border-left-color: #28a745;">
-                <h2 id="total-anggota">0</h2>
-                <p>Total Anggota</p>
-            </div>
-            <div class="stat-box" style="border-left-color: #ffc107;">
-                <h2 id="total-dipinjam">0</h2>
-                <p>Sedang Dipinjam</p>
-            </div>
+            <div class="stat-box"><h2 id="total-buku">0</h2><p>Total Buku</p></div>
+            <div class="stat-box" style="border-left-color: #28a745;"><h2 id="total-anggota">0</h2><p>Total Anggota</p></div>
+            <div class="stat-box" style="border-left-color: #ffc107;"><h2 id="total-dipinjam">0</h2><p>Sedang Dipinjam</p></div>
         </div>
-
-        <div class="welcome">
-            <h2>Selamat Datang, Admin! 👋</h2>
-            <p>Kelola data perpustakaan dengan mudah melalui menu di bawah ini.</p>
-        </div>
-
-        <h2 class="section-title">Menu Utama</h2>
         <div class="menu-grid">
-            <a href="buku.html" class="menu-card">
-                <div class="icon">📖</div>
-                <h3>Kelola Buku</h3>
-            </a>
-            <a href="anggota.html" class="menu-card">
-                <div class="icon">👥</div>
-                <h3>Kelola Anggota</h3>
-            </a>
-            <a href="peminjaman.html" class="menu-card">
-                <div class="icon">📋</div>
-                <h3>Peminjaman</h3>
-            </a>
-            <a href="laporan.html" class="menu-card">
-                <div class="icon">📊</div>
-                <h3>Laporan</h3>
-            </a>
+            <a href="buku.html" class="menu-card"><div class="icon">📖</div><h3>Kelola Buku</h3></a>
+            <a href="anggota.html" class="menu-card"><div class="icon">👥</div><h3>Kelola Anggota</h3></a>
+            <a href="peminjaman.html" class="menu-card"><div class="icon">📋</div><h3>Peminjaman</h3></a>
+            <a href="laporan.html" class="menu-card"><div class="icon">📊</div><h3>Laporan</h3></a>
         </div>
     </div>
-
     <script>
-        // Ambil data dari localStorage
         let dataBuku = JSON.parse(localStorage.getItem('dataBuku')) || [];
         let dataUsers = JSON.parse(localStorage.getItem('dataUsers')) || [];
         let dataPinjaman = JSON.parse(localStorage.getItem('dataPinjaman')) || [];
-
-        // Hitung total
-        let totalBuku = dataBuku.length;
-        let totalAnggota = dataUsers.filter(u => u.role === 'anggota').length;
-        let totalDipinjam = dataPinjaman.filter(p => p.status === 'Dipinjam').length;
-
-        // Tampilkan ke layar
-        document.getElementById('total-buku').innerText = totalBuku;
-        document.getElementById('total-anggota').innerText = totalAnggota;
-        document.getElementById('total-dipinjam').innerText = totalDipinjam;
-
-        function logout() {
-            localStorage.removeItem('userLogin');
-        }
+        document.getElementById('total-buku').innerText = dataBuku.length;
+        document.getElementById('total-anggota').innerText = dataUsers.filter(u => u.role === 'anggota').length;
+        document.getElementById('total-dipinjam').innerText = dataPinjaman.filter(p => p.status === 'Dipinjam').length;
+        function logout() { if(confirm('Yakin ingin keluar?')) localStorage.removeItem('userLogin'); }
     </script>
 </body>
 </html>
