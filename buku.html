@@ -16,6 +16,23 @@
         .header-actions h2 { color: #333; font-size: 22px; }
         .btn-tambah { background-color: #1a73e8; color: white; padding: 10px 18px; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; font-size: 14px; box-shadow: 0 4px 10px rgba(26, 115, 232, 0.3); transition: all 0.3s ease; }
         .btn-tambah:hover { background-color: #1557b0; transform: translateY(-2px); }
+        
+        /* Desain Form Tambah Buku */
+        .form-tambah {
+            background: white; padding: 20px; border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05); margin-bottom: 20px;
+            display: none; /* Sembunyikan secara default */
+        }
+        .form-tambah.active { display: block; } /* Tampilkan jika aktif */
+        .form-tambah h3 { margin-bottom: 15px; color: #333; font-size: 18px; }
+        .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 15px; }
+        .form-group label { display: block; font-size: 13px; margin-bottom: 5px; color: #555; font-weight: 600; }
+        .form-group input { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 8px; font-size: 14px; }
+        .btn-simpan { background-color: #28a745; color: white; padding: 10px 20px; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; }
+        .btn-simpan:hover { background-color: #218838; }
+        .btn-batal { background-color: #dc3545; color: white; padding: 10px 20px; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; margin-left: 10px; }
+        .btn-batal:hover { background-color: #c82333; }
+
         .table-container { background: white; border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); overflow-x: auto; }
         table { width: 100%; border-collapse: collapse; }
         th, td { padding: 15px; text-align: left; font-size: 14px; }
@@ -38,7 +55,32 @@
     <div class="container">
         <div class="header-actions">
             <h2>Daftar Buku Perpustakaan</h2>
-            <button class="btn-tambah" onclick="tambahBuku()">+ Tambah Buku</button>
+            <button class="btn-tambah" onclick="tampilkanForm()">+ Tambah Buku</button>
+        </div>
+
+        <!-- Form Tambah Buku (Tersembunyi di awal) -->
+        <div id="form-tambah-buku" class="form-tambah">
+            <h3>Form Tambah Buku Baru</h3>
+            <div class="form-grid">
+                <div class="form-group">
+                    <label>Judul Buku</label>
+                    <input type="text" id="input-judul" placeholder="Masukkan judul">
+                </div>
+                <div class="form-group">
+                    <label>Penulis</label>
+                    <input type="text" id="input-penulis" placeholder="Masukkan penulis">
+                </div>
+                <div class="form-group">
+                    <label>Tahun Terbit</label>
+                    <input type="number" id="input-tahun" placeholder="Contoh: 2023">
+                </div>
+                <div class="form-group">
+                    <label>Stok</label>
+                    <input type="number" id="input-stok" placeholder="Contoh: 5">
+                </div>
+            </div>
+            <button class="btn-simpan" onclick="simpanBuku()">Simpan Buku</button>
+            <button class="btn-batal" onclick="tampilkanForm()">Batal</button>
         </div>
 
         <div class="table-container">
@@ -86,19 +128,35 @@
             });
         }
 
-        function tambahBuku() {
-            const judul = prompt("Masukkan Judul Buku:");
-            if (!judul) return;
-            const penulis = prompt("Masukkan Nama Penulis:");
-            if (!penulis) return;
-            const tahun = prompt("Masukkan Tahun Terbit:");
-            if (!tahun) return;
-            const stok = prompt("Masukkan Jumlah Stok:");
-            if (!stok) return;
+        // Fungsi untuk memunculkan/menyembunyikan form
+        function tampilkanForm() {
+            const form = document.getElementById('form-tambah-buku');
+            form.classList.toggle('active');
+        }
+
+        // Fungsi untuk menyimpan buku dari form
+        function simpanBuku() {
+            const judul = document.getElementById('input-judul').value;
+            const penulis = document.getElementById('input-penulis').value;
+            const tahun = document.getElementById('input-tahun').value;
+            const stok = document.getElementById('input-stok').value;
+
+            if (!judul || !penulis || !tahun || !stok) {
+                alert("Harap isi semua kolom!");
+                return;
+            }
 
             daftarBuku.push({ judul, penulis, tahun, stok });
             localStorage.setItem('dataBuku', JSON.stringify(daftarBuku));
-            renderTabel();
+            
+            // Kosongkan form dan sembunyikan
+            document.getElementById('input-judul').value = '';
+            document.getElementById('input-penulis').value = '';
+            document.getElementById('input-tahun').value = '';
+            document.getElementById('input-stok').value = '';
+            tampilkanForm();
+
+            renderTabel(); // Refresh tabel
         }
 
         function hapusBuku(index) {
