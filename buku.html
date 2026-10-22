@@ -97,7 +97,7 @@
             if (!stok) return;
 
             daftarBuku.push({ judul, penulis, tahun, stok });
-            localStorage.setItem('dataBuku', JSON.stringify(daftarBuku)); // Simpan ke memori
+            localStorage.setItem('dataBuku', JSON.stringify(daftarBuku));
             renderTabel();
         }
 
@@ -109,7 +109,7 @@
             }
         }
 
-        renderTabel(); // Tampilkan saat halaman dibuka
+        renderTabel();
     </script>
 </body>
 </html>
