@@ -14,8 +14,6 @@
         .container { padding: 25px 20px; max-width: 1000px; margin: auto; }
         .header-actions { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
         .header-actions h2 { color: #333; font-size: 22px; }
-        .btn-tambah { background-color: #1a73e8; color: white; padding: 10px 18px; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; font-size: 14px; box-shadow: 0 4px 10px rgba(26, 115, 232, 0.3); transition: all 0.3s ease; }
-        .btn-tambah:hover { background-color: #1557b0; transform: translateY(-2px); }
         .table-container { background: white; border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); overflow-x: auto; }
         table { width: 100%; border-collapse: collapse; }
         th, td { padding: 15px; text-align: left; font-size: 14px; }
@@ -29,6 +27,7 @@
         .btn-aksi { padding: 6px 12px; border: none; border-radius: 6px; cursor: pointer; font-size: 12px; font-weight: bold; transition: 0.2s; }
         .btn-kembali { background-color: #e8f0fe; color: #1a73e8; }
         .btn-kembali:hover { background-color: #d2e3fc; }
+        .text-denda { color: #dc3545; font-weight: bold; font-size: 13px; display: block; margin-top: 5px; }
     </style>
 </head>
 <body>
@@ -41,8 +40,6 @@
     <div class="container">
         <div class="header-actions">
             <h2>Daftar Transaksi Peminjaman</h2>
-            <!-- Tombol ini bisa dihilangkan jika peminjaman murni dari anggota -->
-            <button class="btn-tambah" onclick="alert('Peminjaman dilakukan melalui akun Anggota.')">Info Pinjam</button>
         </div>
 
         <div class="table-container">
@@ -53,6 +50,7 @@
                         <th>Nama Peminjam</th>
                         <th>Judul Buku</th>
                         <th>Tgl Pinjam</th>
+                        <th>Jatuh Tempo</th>
                         <th>Status</th>
                         <th>Aksi</th>
                     </tr>
@@ -65,24 +63,25 @@
     </div>
 
     <script>
-        // Ambil data pinjaman dari localStorage
         let dataPinjaman = JSON.parse(localStorage.getItem('dataPinjaman')) || [];
         const tbody = document.getElementById('tabel-peminjaman');
 
         function renderTabel() {
-            tbody.innerHTML = ''; // Kosongkan tabel dulu
+            tbody.innerHTML = ''; 
 
             if (dataPinjaman.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="6" style="text-align:center; padding: 20px;">Belum ada pengajuan peminjaman dari Anggota.</td></tr>`;
+                tbody.innerHTML = `<tr><td colspan="7" style="text-align:center; padding: 20px;">Belum ada pengajuan peminjaman dari Anggota.</td></tr>`;
                 return;
             }
 
             dataPinjaman.forEach((item, index) => {
-                // Tentukan warna badge berdasarkan status
                 let badgeClass = item.status === 'Dipinjam' ? 'badge-dipinjam' : 'badge-kembali';
                 let tombolAksi = item.status === 'Dipinjam' 
                     ? `<button class="btn-aksi btn-kembali" onclick="prosesKembali(${index})">Proses Kembali</button>`
                     : `<button class="btn-aksi" disabled style="background:#eee; color:#aaa; cursor:not-allowed;">Selesai</button>`;
+
+                // Tampilkan tanggal jatuh tempo (kalau data lama belum ada, tampilkan '-')
+                let tglJatuhTempo = item.tglJatuhTempo ? item.tglJatuhTempo : "-";
 
                 tbody.innerHTML += `
                     <tr>
@@ -90,6 +89,7 @@
                         <td>${item.nama}</td>
                         <td>${item.judul}</td>
                         <td>${item.tglPinjam}</td>
+                        <td>${tglJatuhTempo}</td>
                         <td><span class="badge ${badgeClass}">${item.status}</span></td>
                         <td>${tombolAksi}</td>
                     </tr>
@@ -97,29 +97,49 @@
             });
         }
 
-        // Fungsi untuk memproses pengembalian
+        // FUNGSI PROSES KEMBALI + HITUNG DENDA
         function prosesKembali(index) {
-            if (confirm("Proses pengembalian buku ini?")) {
-                // 1. Ubah status menjadi 'Dikembalikan'
+            let hariIni = new Date();
+            let tanggalJatuhTempo = new Date(dataPinjaman[index].tglJatuhTempo);
+            
+            let pesanKonfirmasi = "Proses pengembalian buku ini?";
+            let denda = 0;
+
+            // Hitung selisih hari
+            if (dataPinjaman[index].tglJatuhTempo) {
+                let selisihWaktu = hariIni.getTime() - tanggalJatuhTempo.getTime();
+                let selisihHari = Math.ceil(selisihWaktu / (1000 * 3600 * 24));
+
+                if (selisihHari > 0) {
+                    denda = selisihHari * 1000; // Denda Rp 1.000 per hari
+                    pesanKonfirmasi = `⚠️ BUKU TERLAMBAT ${selisihHari} HARI!\n\nDenda yang harus dibayar: Rp ${denda.toLocaleString('id-ID')}\n\nApakah denda sudah dibayar dan buku diterima?`;
+                }
+            }
+
+            if (confirm(pesanKonfirmasi)) {
+                // 1. Ubah status
                 dataPinjaman[index].status = "Dikembalikan";
                 localStorage.setItem('dataPinjaman', JSON.stringify(dataPinjaman));
 
                 // 2. Kembalikan stok buku
                 let daftarBuku = JSON.parse(localStorage.getItem('dataBuku')) || [];
-                // Cari buku berdasarkan judul (karena kita tidak menyimpan ID buku di dataPinjaman)
                 let bukuIndex = daftarBuku.findIndex(b => b.judul === dataPinjaman[index].judul);
                 
                 if (bukuIndex !== -1) {
-                    daftarBuku[bukuIndex].stok = parseInt(daftarBuku[bukuIndex].stok) + 1; // Tambah stok
+                    daftarBuku[bukuIndex].stok = parseInt(daftarBuku[bukuIndex].stok) + 1; 
                     localStorage.setItem('dataBuku', JSON.stringify(daftarBuku));
                 }
 
-                alert("Buku berhasil dikembalikan! Stok telah diperbarui.");
-                renderTabel(); // Refresh tabel
+                if (denda > 0) {
+                    alert(`Pengembalian diproses. Denda Rp ${denda.toLocaleString('id-ID')} telah dicatat.`);
+                } else {
+                    alert("Buku berhasil dikembalikan tepat waktu. Tidak ada denda.");
+                }
+                
+                renderTabel(); 
             }
         }
 
-        // Tampilkan tabel saat halaman dibuka
         renderTabel();
     </script>
 </body>
