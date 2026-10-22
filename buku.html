@@ -3,201 +3,90 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kelola Buku - Admin</title>
+    <title>Kelola Buku</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
-        body { background-color: #f0f2f5; color: #333; }
-        .navbar { background-color: #ffffff; padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 10px rgba(0,0,0,0.05); position: sticky; top: 0; z-index: 100; }
+        body { background-color: #f0f2f5; }
+        .navbar { background: #fff; padding: 15px 20px; display: flex; justify-content: space-between; box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
         .navbar h1 { font-size: 18px; color: #1a73e8; }
-        .navbar a { color: #1a73e8; text-decoration: none; font-size: 14px; font-weight: bold; padding: 8px 15px; border-radius: 8px; background-color: #e8f0fe; transition: 0.3s; }
-        .navbar a:hover { background-color: #d2e3fc; }
+        .navbar a { color: #1a73e8; text-decoration: none; font-weight: bold; background: #e8f0fe; padding: 8px 15px; border-radius: 8px; }
         .container { padding: 25px 20px; max-width: 1000px; margin: auto; }
-        .header-actions { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
-        .header-actions h2 { color: #333; font-size: 22px; }
-        .btn-tambah { background-color: #1a73e8; color: white; padding: 10px 18px; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; font-size: 14px; box-shadow: 0 4px 10px rgba(26, 115, 232, 0.3); transition: all 0.3s ease; }
-        .btn-tambah:hover { background-color: #1557b0; transform: translateY(-2px); }
-        
-        /* Form Tambah/Edit Buku */
-        .form-buku {
-            background: white; padding: 20px; border-radius: 15px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.05); margin-bottom: 20px;
-            display: none; 
-        }
-        .form-buku.active { display: block; } 
-        .form-buku h3 { margin-bottom: 15px; color: #333; font-size: 18px; }
+        .header-actions { display: flex; justify-content: space-between; margin-bottom: 20px; align-items: center;}
+        .btn-tambah { background: #1a73e8; color: white; padding: 10px 18px; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; }
+        .form-buku { background: white; padding: 20px; border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); margin-bottom: 20px; display: none; }
+        .form-buku.active { display: block; }
         .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 15px; }
-        .form-group label { display: block; font-size: 13px; margin-bottom: 5px; color: #555; font-weight: 600; }
-        .form-group input { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 8px; font-size: 14px; }
-        .btn-simpan { background-color: #28a745; color: white; padding: 10px 20px; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; }
-        .btn-simpan:hover { background-color: #218838; }
-        .btn-batal { background-color: #dc3545; color: white; padding: 10px 20px; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; margin-left: 10px; }
-        .btn-batal:hover { background-color: #c82333; }
-
-        .table-container { background: white; border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); overflow-x: auto; }
+        .form-group label { display: block; font-size: 13px; margin-bottom: 5px; }
+        .form-group input { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 8px; }
+        .btn-simpan { background: #28a745; color: white; padding: 10px 20px; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; }
+        .btn-batal { background: #dc3545; color: white; padding: 10px 20px; border: none; border-radius: 8px; cursor: pointer; margin-left: 10px; }
+        .table-container { background: white; border-radius: 15px; overflow-x: auto; box-shadow: 0 4px 15px rgba(0,0,0,0.05); }
         table { width: 100%; border-collapse: collapse; }
-        th, td { padding: 15px; text-align: left; font-size: 14px; }
-        th { background-color: #f8f9fa; color: #555; font-weight: 600; border-bottom: 2px solid #eaeaea; }
-        td { border-bottom: 1px solid #eaeaea; color: #444; }
-        tr:last-child td { border-bottom: none; }
-        tr:hover td { background-color: #f9fbff; }
-        
-        .btn-aksi { padding: 6px 12px; border: none; border-radius: 6px; cursor: pointer; font-size: 12px; font-weight: bold; transition: 0.2s; margin-right: 5px; }
-        .btn-edit { background-color: #fff3cd; color: #856404; }
-        .btn-edit:hover { background-color: #ffeeba; }
-        .btn-hapus { background-color: #f8d7da; color: #721c24; }
-        .btn-hapus:hover { background-color: #f5c6cb; }
+        th, td { padding: 15px; text-align: left; border-bottom: 1px solid #eee; }
+        th { background: #f8f9fa; color: #555; }
+        .btn-aksi { padding: 6px 12px; border: none; border-radius: 6px; cursor: pointer; font-weight: bold; margin-right: 5px; }
+        .btn-edit { background: #fff3cd; color: #856404; }
+        .btn-hapus { background: #f8d7da; color: #721c24; }
     </style>
 </head>
 <body>
-
-    <nav class="navbar">
-        <h1>📖 Kelola Buku</h1>
-        <a href="dashboard.html">← Kembali</a>
-    </nav>
-
+    <nav class="navbar"><h1>📖 Kelola Buku</h1><a href="dashboard.html">← Kembali</a></nav>
     <div class="container">
         <div class="header-actions">
-            <h2>Daftar Buku Perpustakaan</h2>
+            <h2>Daftar Buku</h2>
             <button class="btn-tambah" onclick="bukaFormTambah()">+ Tambah Buku</button>
         </div>
-
-        <!-- Form Tambah/Edit Buku -->
         <div id="form-buku" class="form-buku">
-            <h3 id="judul-form">Form Tambah Buku Baru</h3>
+            <h3 id="judul-form" style="margin-bottom:15px;">Tambah Buku</h3>
             <div class="form-grid">
-                <div class="form-group">
-                    <label>Judul Buku</label>
-                    <input type="text" id="input-judul" placeholder="Masukkan judul">
-                </div>
-                <div class="form-group">
-                    <label>Penulis</label>
-                    <input type="text" id="input-penulis" placeholder="Masukkan penulis">
-                </div>
-                <div class="form-group">
-                    <label>Tahun Terbit</label>
-                    <input type="number" id="input-tahun" placeholder="Contoh: 2023">
-                </div>
-                <div class="form-group">
-                    <label>Stok</label>
-                    <input type="number" id="input-stok" placeholder="Contoh: 5">
-                </div>
+                <div class="form-group"><label>Judul</label><input type="text" id="input-judul"></div>
+                <div class="form-group"><label>Penulis</label><input type="text" id="input-penulis"></div>
+                <div class="form-group"><label>Tahun</label><input type="number" id="input-tahun"></div>
+                <div class="form-group"><label>Stok</label><input type="number" id="input-stok"></div>
             </div>
-            <button class="btn-simpan" onclick="simpanBuku()">Simpan Buku</button>
+            <button class="btn-simpan" onclick="simpanBuku()">Simpan</button>
             <button class="btn-batal" onclick="tutupForm()">Batal</button>
         </div>
-
         <div class="table-container">
             <table>
-                <thead>
-                    <tr>
-                        <th>No</th>
-                        <th>Judul Buku</th>
-                        <th>Penulis</th>
-                        <th>Tahun</th>
-                        <th>Stok</th>
-                        <th>Aksi</th>
-                    </tr>
-                </thead>
-                <tbody id="tabel-buku">
-                    <!-- Data akan diisi JS -->
-                </tbody>
+                <thead><tr><th>No</th><th>Judul</th><th>Penulis</th><th>Tahun</th><th>Stok</th><th>Aksi</th></tr></thead>
+                <tbody id="tabel-buku"></tbody>
             </table>
         </div>
     </div>
-
     <script>
         let daftarBuku = JSON.parse(localStorage.getItem('dataBuku')) || [];
-        let indexEdit = -1; // Menyimpan index buku yang sedang diedit (-1 artinya tambah baru)
-
+        let indexEdit = -1;
         function renderTabel() {
-            const tbody = document.getElementById('tabel-buku');
-            tbody.innerHTML = '';
-
-            if (daftarBuku.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="6" style="text-align:center; padding: 20px;">Belum ada data buku.</td></tr>`;
-                return;
-            }
-
-            daftarBuku.forEach((buku, index) => {
-                tbody.innerHTML += `
-                    <tr>
-                        <td>${index + 1}</td>
-                        <td>${buku.judul}</td>
-                        <td>${buku.penulis}</td>
-                        <td>${buku.tahun}</td>
-                        <td>${buku.stok}</td>
-                        <td>
-                            <button class="btn-aksi btn-edit" onclick="bukaFormEdit(${index})">Edit</button>
-                            <button class="btn-aksi btn-hapus" onclick="hapusBuku(${index})">Hapus</button>
-                        </td>
-                    </tr>
-                `;
+            const tbody = document.getElementById('tabel-buku'); tbody.innerHTML = '';
+            if (daftarBuku.length === 0) { tbody.innerHTML = `<tr><td colspan="6" style="text-align:center;">Belum ada data.</td></tr>`; return; }
+            daftarBuku.forEach((b, i) => {
+                tbody.innerHTML += `<tr><td>${i+1}</td><td>${b.judul}</td><td>${b.penulis}</td><td>${b.tahun}</td><td>${b.stok}</td>
+                <td><button class="btn-aksi btn-edit" onclick="bukaFormEdit(${i})">Edit</button><button class="btn-aksi btn-hapus" onclick="hapusBuku(${i})">Hapus</button></td></tr>`;
             });
         }
-
-        // FUNGSI UNTUK MEMBUKA FORM (TAMBAH BARU)
         function bukaFormTambah() {
-            indexEdit = -1; // Reset index edit
-            document.getElementById('judul-form').innerText = "Form Tambah Buku Baru";
-            document.getElementById('input-judul').value = '';
-            document.getElementById('input-penulis').value = '';
-            document.getElementById('input-tahun').value = '';
-            document.getElementById('input-stok').value = '';
+            indexEdit = -1; document.getElementById('judul-form').innerText = "Tambah Buku";
+            document.getElementById('input-judul').value = ''; document.getElementById('input-penulis').value = '';
+            document.getElementById('input-tahun').value = ''; document.getElementById('input-stok').value = '';
             document.getElementById('form-buku').classList.add('active');
         }
-
-        // FUNGSI UNTUK MEMBUKA FORM (EDIT)
-        function bukaFormEdit(index) {
-            indexEdit = index; // Simpan index yang mau diedit
-            document.getElementById('judul-form').innerText = "Edit Data Buku";
-            
-            // Isi form dengan data yang mau diedit
-            document.getElementById('input-judul').value = daftarBuku[index].judul;
-            document.getElementById('input-penulis').value = daftarBuku[index].penulis;
-            document.getElementById('input-tahun').value = daftarBuku[index].tahun;
-            document.getElementById('input-stok').value = daftarBuku[index].stok;
-            
+        function bukaFormEdit(i) {
+            indexEdit = i; document.getElementById('judul-form').innerText = "Edit Buku";
+            document.getElementById('input-judul').value = daftarBuku[i].judul; document.getElementById('input-penulis').value = daftarBuku[i].penulis;
+            document.getElementById('input-tahun').value = daftarBuku[i].tahun; document.getElementById('input-stok').value = daftarBuku[i].stok;
             document.getElementById('form-buku').classList.add('active');
         }
-
-        // FUNGSI UNTUK MENUTUP FORM
-        function tutupForm() {
-            document.getElementById('form-buku').classList.remove('active');
-        }
-
-        // FUNGSI SIMPAN (Bisa untuk Tambah Baru atau Simpan Hasil Edit)
+        function tutupForm() { document.getElementById('form-buku').classList.remove('active'); }
         function simpanBuku() {
-            const judul = document.getElementById('input-judul').value;
-            const penulis = document.getElementById('input-penulis').value;
-            const tahun = document.getElementById('input-tahun').value;
-            const stok = document.getElementById('input-stok').value;
-
-            if (!judul || !penulis || !tahun || !stok) {
-                alert("Harap isi semua kolom!");
-                return;
-            }
-
-            if (indexEdit === -1) {
-                // Kalau indexEdit -1, berarti TAMBAH BARU
-                daftarBuku.push({ judul, penulis, tahun, stok });
-            } else {
-                // Kalau indexEdit bukan -1, berarti EDIT data yang sudah ada
-                daftarBuku[indexEdit] = { judul, penulis, tahun, stok };
-            }
-
-            localStorage.setItem('dataBuku', JSON.stringify(daftarBuku));
-            tutupForm();
-            renderTabel(); 
+            const judul = document.getElementById('input-judul').value; const penulis = document.getElementById('input-penulis').value;
+            const tahun = document.getElementById('input-tahun').value; const stok = document.getElementById('input-stok').value;
+            if (!judul || !penulis || !tahun || !stok) { alert("Isi semua!"); return; }
+            if (indexEdit === -1) daftarBuku.push({ judul, penulis, tahun, stok });
+            else daftarBuku[indexEdit] = { judul, penulis, tahun, stok };
+            localStorage.setItem('dataBuku', JSON.stringify(daftarBuku)); tutupForm(); renderTabel();
         }
-
-        function hapusBuku(index) {
-            if (confirm("Yakin ingin menghapus buku ini?")) {
-                daftarBuku.splice(index, 1);
-                localStorage.setItem('dataBuku', JSON.stringify(daftarBuku));
-                renderTabel();
-            }
-        }
-
+        function hapusBuku(i) { if(confirm('Hapus buku ini?')) { daftarBuku.splice(i, 1); localStorage.setItem('dataBuku', JSON.stringify(daftarBuku)); renderTabel(); } }
         renderTabel();
     </script>
 </body>
