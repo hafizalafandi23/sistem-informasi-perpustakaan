@@ -7,7 +7,7 @@
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
         body { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); display: flex; justify-content: center; align-items: center; min-height: 100vh; padding: 20px; }
-        .login-container { background: rgba(255, 255, 255, 0.95); padding: 40px 30px; border-radius: 20px; box-shadow: 0 15px 35px rgba(0,0,0,0.2); width: 100%; max-width: 400px; transition: transform 0.3s ease; }
+        .login-container { background: rgba(255, 255, 255, 0.95); padding: 40px 30px; border-radius: 20px; box-shadow: 0 15px 35px rgba(0,0,0,0.2); width: 100%; max-width: 400px; }
         .login-container h1 { text-align: center; color: #333; font-size: 24px; margin-bottom: 5px; }
         .login-container p { text-align: center; color: #777; font-size: 14px; margin-bottom: 30px; }
         .form-group { margin-bottom: 20px; }
@@ -22,109 +22,78 @@
     </style>
 </head>
 <body>
-
     <div class="login-container">
-        <!-- FORM LOGIN -->
         <div id="form-login">
-            <h1>📚 Perpustakaan Digital</h1>
+            <h1>📚 Perpustakaan</h1>
             <p>Silakan login untuk melanjutkan</p>
             <form onsubmit="return loginUser(event)">
                 <div class="form-group">
-                    <label for="login-username">Username</label>
+                    <label>Username</label>
                     <input type="text" id="login-username" placeholder="Masukkan username" required>
                 </div>
                 <div class="form-group">
-                    <label for="login-password">Password</label>
+                    <label>Password</label>
                     <input type="password" id="login-password" placeholder="Masukkan password" required>
                 </div>
                 <button type="submit" class="btn-login">Login</button>
             </form>
-            <a class="toggle-link" onclick="toggleForm()">Belum punya akun? Daftar sebagai Anggota di sini</a>
+            <a class="toggle-link" onclick="toggleForm()">Belum punya akun? Daftar Anggota</a>
         </div>
 
-        <!-- FORM DAFTAR (HANYA ANGGOTA) -->
         <div id="form-daftar" class="hidden">
-            <h1>📝 Daftar Anggota Baru</h1>
+            <h1>📝 Daftar Anggota</h1>
             <p>Silakan isi data diri Anda</p>
             <form onsubmit="return daftarUser(event)">
                 <div class="form-group">
-                    <label for="daftar-nama">Nama Lengkap</label>
-                    <input type="text" id="daftar-nama" placeholder="Masukkan nama lengkap" required>
+                    <label>Nama Lengkap</label>
+                    <input type="text" id="daftar-nama" placeholder="Masukkan nama" required>
                 </div>
                 <div class="form-group">
-                    <label for="daftar-username">Username</label>
+                    <label>Username</label>
                     <input type="text" id="daftar-username" placeholder="Buat username" required>
                 </div>
                 <div class="form-group">
-                    <label for="daftar-password">Password</label>
+                    <label>Password</label>
                     <input type="password" id="daftar-password" placeholder="Buat password" required>
                 </div>
-                <button type="submit" class="btn-login">Daftar Sekarang</button>
+                <button type="submit" class="btn-login">Daftar</button>
             </form>
-            <a class="toggle-link" onclick="toggleForm()">Sudah punya akun? Login di sini</a>
+            <a class="toggle-link" onclick="toggleForm()">Sudah punya akun? Login</a>
         </div>
     </div>
-
     <script>
-        // --- SETUP AKUN ADMIN BAWAAN SISTEM ---
         let users = JSON.parse(localStorage.getItem('dataUsers')) || [];
         if (!users.find(u => u.username === 'admin')) {
             users.push({ role: 'admin', nama: 'Administrator', username: 'admin', password: 'admin123' });
             localStorage.setItem('dataUsers', JSON.stringify(users));
         }
-
         function toggleForm() {
             document.getElementById('form-login').classList.toggle('hidden');
             document.getElementById('form-daftar').classList.toggle('hidden');
         }
-
-        // FUNGSI DAFTAR (Otomatis Role: Anggota)
         function daftarUser(event) {
             event.preventDefault();
             const nama = document.getElementById('daftar-nama').value;
             const username = document.getElementById('daftar-username').value;
             const password = document.getElementById('daftar-password').value;
-
             let users = JSON.parse(localStorage.getItem('dataUsers')) || [];
-
-            if (users.find(u => u.username === username)) {
-                alert("Username sudah terdaftar! Silakan gunakan username lain.");
-                return;
-            }
-
-            // Simpan user baru dengan role 'anggota' otomatis
+            if (users.find(u => u.username === username)) { alert("Username sudah terdaftar!"); return; }
             users.push({ role: 'anggota', nama, username, password });
             localStorage.setItem('dataUsers', JSON.stringify(users));
-
-            alert("Pendaftaran Anggota berhasil! Silakan login.");
-            
+            alert("Pendaftaran berhasil! Silakan login.");
             toggleForm();
-            document.getElementById('daftar-nama').value = '';
-            document.getElementById('daftar-username').value = '';
-            document.getElementById('daftar-password').value = '';
         }
-
-        // FUNGSI LOGIN
         function loginUser(event) {
             event.preventDefault();
             const username = document.getElementById('login-username').value;
             const password = document.getElementById('login-password').value;
-
             let users = JSON.parse(localStorage.getItem('dataUsers')) || [];
             const user = users.find(u => u.username === username && u.password === password);
-
             if (user) {
                 localStorage.setItem('userLogin', JSON.stringify({ nama: user.nama, role: user.role, username: user.username }));
-                alert(`Login berhasil sebagai ${user.role.toUpperCase()}!`);
-                
-                if (user.role === 'admin') {
-                    window.location.href = "dashboard.html";
-                } else {
-                    window.location.href = "katalog.html";
-                }
-            } else {
-                alert("Login gagal! Username atau password salah.");
-            }
+                if (user.role === 'admin') { window.location.href = "dashboard.html"; } 
+                else { window.location.href = "katalog.html"; }
+            } else { alert("Login gagal!"); }
         }
     </script>
 </body>
