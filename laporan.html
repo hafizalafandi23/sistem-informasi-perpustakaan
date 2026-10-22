@@ -86,7 +86,7 @@
         let totalDipinjam = dataPinjaman.filter(p => p.status === 'Dipinjam').length;
         let totalKembali = dataPinjaman.filter(p => p.status === 'Dikembalikan').length;
 
-        // Tampilkan Statistik
+        // Tampilkan Statistik ke layar
         document.getElementById('stat-buku').innerText = totalBuku;
         document.getElementById('stat-anggota').innerText = totalAnggota;
         document.getElementById('stat-dipinjam').innerText = totalDipinjam;
