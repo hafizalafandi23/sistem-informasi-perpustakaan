@@ -47,66 +47,63 @@
         if (userLogin) {
             document.getElementById('sapaan').innerText = `Selamat Datang, ${userLogin.nama}! 👋`;
         } else {
-            // Kalau belum login, tendang balik ke halaman login
             window.location.href = "login.html";
         }
 
-        // 2. Ambil data buku dari localStorage (yang diinput oleh Admin)
+        // 2. Ambil data buku dari localStorage
         let daftarBuku = JSON.parse(localStorage.getItem('dataBuku')) || [];
         const container = document.getElementById('katalog-buku');
 
-        if (daftarBuku.length === 0) {
-            container.innerHTML = `<p style="text-align:center; grid-column: 1 / -1; color:#888;">Belum ada buku di perpustakaan. Silakan hubungi Admin.</p>`;
-        } else {
-            daftarBuku.forEach((buku, index) => {
-                container.innerHTML += `
-                    <div class="buku-card">
-                        <div>
-                            <h4>${buku.judul}</h4>
-                            <p>Penulis: ${buku.penulis}</p>
-                            <p>Tahun: ${buku.tahun}</p>
-                            <p>Stok: <b>${buku.stok}</b></p>
+        function renderKatalog() {
+            container.innerHTML = '';
+            if (daftarBuku.length === 0) {
+                container.innerHTML = `<p style="text-align:center; grid-column: 1 / -1; color:#888;">Belum ada buku di perpustakaan. Silakan hubungi Admin.</p>`;
+            } else {
+                daftarBuku.forEach((buku, index) => {
+                    container.innerHTML += `
+                        <div class="buku-card">
+                            <div>
+                                <h4>${buku.judul}</h4>
+                                <p>Penulis: ${buku.penulis}</p>
+                                <p>Tahun: ${buku.tahun}</p>
+                                <p>Stok: <b>${buku.stok}</b></p>
+                            </div>
+                            <button class="btn-pinjam" onclick="pinjamBuku('${buku.judul}', ${index})">Pinjam Buku</button>
                         </div>
-                        <button class="btn-pinjam" onclick="pinjamBuku('${buku.judul}', ${index})">Pinjam Buku</button>
-                    </div>
-                `;
-            });
+                    `;
+                });
+            }
         }
 
-        // 3. Fungsi saat Anggota klik "Pinjam Buku"
+        // 3. Fungsi Pinjam Buku
         function pinjamBuku(judul, indexBuku) {
-            // Cek stok dulu
             if (daftarBuku[indexBuku].stok <= 0) {
                 alert("Maaf, stok buku ini sedang habis.");
                 return;
             }
 
             let dataPinjaman = JSON.parse(localStorage.getItem('dataPinjaman')) || [];
-
-            // Simpan data pinjaman dengan nama anggota yang sedang login
             dataPinjaman.push({
                 nama: userLogin.nama,
                 judul: judul,
                 tglPinjam: new Date().toLocaleDateString('id-ID'),
                 status: "Dipinjam"
             });
-
             localStorage.setItem('dataPinjaman', JSON.stringify(dataPinjaman));
 
-            // Kurangi stok buku
+            // Kurangi stok
             daftarBuku[indexBuku].stok -= 1;
             localStorage.setItem('dataBuku', JSON.stringify(daftarBuku));
 
             alert(`Berhasil! Buku "${judul}" telah diajukan. Silakan cek di halaman Admin.`);
-            
-            // Refresh halaman agar stok langsung berkurang
-            location.reload();
+            renderKatalog(); // Refresh tampilan katalog
         }
 
-        // 4. Fungsi Logout
         function logout() {
             localStorage.removeItem('userLogin');
         }
+
+        renderKatalog();
     </script>
 </body>
 </html>
