@@ -3,76 +3,130 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Laporan - Perpustakaan</title>
+    <title>Laporan - Admin</title>
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: Arial, sans-serif; }
-        body { background-color: #f4f6f9; }
-        .navbar {
-            background-color: #1a73e8; color: white;
-            padding: 15px 20px; display: flex;
-            justify-content: space-between; align-items: center;
-        }
-        .navbar h1 { font-size: 18px; }
-        .navbar a { color: white; text-decoration: none; font-size: 14px; }
-        .container { padding: 20px; max-width: 900px; margin: auto; }
-        .card {
-            background: white; padding: 20px; border-radius: 10px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.08); margin-bottom: 15px;
-        }
-        .card h3 { color: #1a73e8; margin-bottom: 8px; }
-        .card p { font-size: 14px; color: #555; }
-        .stat-grid {
-            display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-            gap: 15px; margin-bottom: 20px;
-        }
-        .stat-card {
-            background: white; padding: 20px; border-radius: 10px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.08); text-align: center;
-        }
-        .stat-card h2 { color: #1a73e8; font-size: 28px; }
-        .stat-card p { font-size: 13px; color: #666; }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        body { background-color: #f0f2f5; color: #333; }
+        .navbar { background-color: #ffffff; padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 10px rgba(0,0,0,0.05); position: sticky; top: 0; z-index: 100; }
+        .navbar h1 { font-size: 18px; color: #1a73e8; }
+        .navbar a { color: #1a73e8; text-decoration: none; font-size: 14px; font-weight: bold; padding: 8px 15px; border-radius: 8px; background-color: #e8f0fe; transition: 0.3s; }
+        .navbar a:hover { background-color: #d2e3fc; }
+        
+        .container { padding: 25px 20px; max-width: 1000px; margin: auto; }
+        
+        /* Kotak Statistik */
+        .stats-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 15px; margin-bottom: 30px; }
+        .stat-box { background: white; padding: 20px; border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); text-align: center; border-bottom: 4px solid #1a73e8; }
+        .stat-box h2 { font-size: 28px; color: #1a73e8; margin-bottom: 5px; }
+        .stat-box p { font-size: 14px; color: #777; font-weight: 600; }
+
+        /* Kotak Laporan */
+        .report-box { background: white; padding: 25px; border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); margin-bottom: 20px; }
+        .report-box h3 { color: #1a73e8; margin-bottom: 15px; border-bottom: 1px solid #eee; padding-bottom: 10px; }
+        .report-list { list-style: none; }
+        .report-list li { padding: 10px 0; border-bottom: 1px dashed #eee; font-size: 14px; color: #444; display: flex; justify-content: space-between; }
+        .report-list li:last-child { border-bottom: none; }
+        .text-kosong { color: #888; font-style: italic; text-align: center; padding: 20px 0; }
     </style>
 </head>
 <body>
 
     <nav class="navbar">
-        <h1>📊 Laporan</h1>
+        <h1>📊 Laporan Perpustakaan</h1>
         <a href="dashboard.html">← Kembali</a>
     </nav>
 
     <div class="container">
-        <div class="stat-grid">
-            <div class="stat-card">
-                <h2>50</h2>
+        <!-- Statistik Ringkasan -->
+        <div class="stats-grid">
+            <div class="stat-box">
+                <h2 id="stat-buku">0</h2>
                 <p>Total Buku</p>
             </div>
-            <div class="stat-card">
-                <h2>25</h2>
+            <div class="stat-box" style="border-bottom-color: #28a745;">
+                <h2 id="stat-anggota">0</h2>
                 <p>Total Anggota</p>
             </div>
-            <div class="stat-card">
-                <h2>10</h2>
+            <div class="stat-box" style="border-bottom-color: #ffc107;">
+                <h2 id="stat-dipinjam">0</h2>
                 <p>Buku Dipinjam</p>
             </div>
-            <div class="stat-card">
-                <h2>3</h2>
-                <p>Terlambat</p>
+            <div class="stat-box" style="border-bottom-color: #dc3545;">
+                <h2 id="stat-kembali">0</h2>
+                <p>Sudah Kembali</p>
             </div>
         </div>
 
-        <div class="card">
-            <h3>Laporan Peminjaman Terbaru</h3>
-            <p>1. Hafiz Al Afandi — Belajar Pemrograman Web — 20 Okt 2026</p>
-            <p>2. Farid Ridho — Rancangan Perangkat Lunak — 19 Okt 2026</p>
-            <p>3. Naufal Ahmad Firdaus — Algoritma dan Struktur Data — 18 Okt 2026</p>
+        <!-- Laporan Peminjaman Terbaru -->
+        <div class="report-box">
+            <h3>Riwayat Transaksi Terbaru</h3>
+            <ul class="report-list" id="list-transaksi">
+                <!-- Data akan diisi JS -->
+            </ul>
         </div>
 
-        <div class="card">
-            <h3>Laporan Buku Terlambat</h3>
-            <p>1. Sheviani Tun Hasanah — Basis Data Modern — Telat 3 hari</p>
-            <p>2. Farid Ridho — Pemrograman Web — Telat 1 hari</p>
+        <!-- Laporan Buku yang Sedang Dipinjam -->
+        <div class="report-box">
+            <h3>Buku yang Sedang Dipinjam</h3>
+            <ul class="report-list" id="list-dipinjam">
+                <!-- Data akan diisi JS -->
+            </ul>
         </div>
     </div>
 
+    <script>
+        // 1. Ambil semua data dari localStorage
+        let dataBuku = JSON.parse(localStorage.getItem('dataBuku')) || [];
+        let dataUsers = JSON.parse(localStorage.getItem('dataUsers')) || [];
+        let dataPinjaman = JSON.parse(localStorage.getItem('dataPinjaman')) || [];
+
+        // 2. Hitung Statistik
+        let totalBuku = dataBuku.length;
+        let totalAnggota = dataUsers.filter(u => u.role === 'anggota').length;
+        let totalDipinjam = dataPinjaman.filter(p => p.status === 'Dipinjam').length;
+        let totalKembali = dataPinjaman.filter(p => p.status === 'Dikembalikan').length;
+
+        // Tampilkan Statistik
+        document.getElementById('stat-buku').innerText = totalBuku;
+        document.getElementById('stat-anggota').innerText = totalAnggota;
+        document.getElementById('stat-dipinjam').innerText = totalDipinjam;
+        document.getElementById('stat-kembali').innerText = totalKembali;
+
+        // 3. Render Riwayat Transaksi Terbaru
+        const listTransaksi = document.getElementById('list-transaksi');
+        if (dataPinjaman.length === 0) {
+            listTransaksi.innerHTML = `<li class="text-kosong">Belum ada riwayat transaksi peminjaman.</li>`;
+        } else {
+            // Urutkan dari yang terbaru (index terakhir)
+            let riwayat = [...dataPinjaman].reverse();
+            riwayat.forEach(item => {
+                listTransaksi.innerHTML += `
+                    <li>
+                        <span><b>${item.nama}</b> meminjam "${item.judul}"</span>
+                        <span style="color: #666; font-size: 12px;">${item.tglPinjam} | ${item.status}</span>
+                    </li>
+                `;
+            });
+        }
+
+        // 4. Render Buku yang Sedang Dipinjam
+        const listDipinjam = document.getElementById('list-dipinjam');
+        let bukuDipinjam = dataPinjaman.filter(p => p.status === 'Dipinjam');
+
+        if (bukuDipinjam.length === 0) {
+            listDipinjam.innerHTML = `<li class="text-kosong">Tidak ada buku yang sedang dipinjam saat ini.</li>`;
+        } else {
+            bukuDipinjam.forEach(item => {
+                listDipinjam.innerHTML += `
+                    <li>
+                        <span><b>${item.judul}</b></span>
+                        <span style="color: #856404; background: #fff3cd; padding: 3px 8px; border-radius: 5px; font-size: 12px; font-weight: bold;">
+                            Dipinjam oleh: ${item.nama}
+                        </span>
+                    </li>
+                `;
+            });
+        }
+    </script>
 </body>
 </html>
