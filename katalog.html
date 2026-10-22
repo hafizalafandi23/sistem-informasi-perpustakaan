@@ -12,8 +12,14 @@
         .navbar a { color: white; text-decoration: none; font-size: 14px; font-weight: bold; background: rgba(255,255,255,0.2); padding: 8px 15px; border-radius: 8px; }
         .navbar a:hover { background: rgba(255,255,255,0.3); }
         .container { padding: 25px 20px; max-width: 1000px; margin: auto; }
-        .welcome { background: white; padding: 25px; border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); margin-bottom: 30px; }
+        .welcome { background: white; padding: 25px; border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); margin-bottom: 20px; }
         .welcome h2 { color: #1a73e8; margin-bottom: 8px; }
+        
+        /* Desain Kolom Pencarian */
+        .search-box { background: white; padding: 15px 20px; border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); margin-bottom: 30px; display: flex; }
+        .search-box input { flex: 1; padding: 12px 15px; border: 2px solid #e0e0e0; border-radius: 8px; font-size: 15px; outline: none; transition: 0.3s; }
+        .search-box input:focus { border-color: #1a73e8; }
+
         .buku-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; }
         .buku-card { background: white; padding: 20px; border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); display: flex; flex-direction: column; justify-content: space-between; transition: 0.3s; }
         .buku-card:hover { transform: translateY(-5px); box-shadow: 0 8px 25px rgba(26, 115, 232, 0.15); }
@@ -36,13 +42,18 @@
             <p>Silakan pilih buku yang ingin Anda pinjam dari katalog di bawah ini.</p>
         </div>
 
+        <!-- KOLOM PENCARIAN BARU -->
+        <div class="search-box">
+            <input type="text" id="input-cari" placeholder="🔍 Cari judul buku atau nama penulis..." onkeyup="cariBuku()">
+        </div>
+
         <div class="buku-grid" id="katalog-buku">
             <!-- Data buku akan dimunculkan di sini oleh JavaScript -->
         </div>
     </div>
 
     <script>
-        // 1. Ambil data user yang sedang login untuk sapaan
+        // 1. Ambil data user yang sedang login
         const userLogin = JSON.parse(localStorage.getItem('userLogin'));
         if (userLogin) {
             document.getElementById('sapaan').innerText = `Selamat Datang, ${userLogin.nama}! 👋`;
@@ -54,12 +65,15 @@
         let daftarBuku = JSON.parse(localStorage.getItem('dataBuku')) || [];
         const container = document.getElementById('katalog-buku');
 
-        function renderKatalog() {
+        function renderKatalog(dataYangDitampilkan = daftarBuku) {
             container.innerHTML = '';
-            if (daftarBuku.length === 0) {
-                container.innerHTML = `<p style="text-align:center; grid-column: 1 / -1; color:#888;">Belum ada buku di perpustakaan. Silakan hubungi Admin.</p>`;
+            if (dataYangDitampilkan.length === 0) {
+                container.innerHTML = `<p style="text-align:center; grid-column: 1 / -1; color:#888;">Buku tidak ditemukan.</p>`;
             } else {
-                daftarBuku.forEach((buku, index) => {
+                dataYangDitampilkan.forEach((buku) => {
+                    // Kita cari index asli buku ini di array utama (untuk keperluan pinjam)
+                    const indexAsli = daftarBuku.findIndex(b => b.judul === buku.judul);
+                    
                     container.innerHTML += `
                         <div class="buku-card">
                             <div>
@@ -68,14 +82,25 @@
                                 <p>Tahun: ${buku.tahun}</p>
                                 <p>Stok: <b>${buku.stok}</b></p>
                             </div>
-                            <button class="btn-pinjam" onclick="pinjamBuku('${buku.judul}', ${index})">Pinjam Buku</button>
+                            <button class="btn-pinjam" onclick="pinjamBuku('${buku.judul}', ${indexAsli})">Pinjam Buku</button>
                         </div>
                     `;
                 });
             }
         }
 
-        // 3. Fungsi Pinjam Buku
+        // FUNGSI PENCARIAN
+        function cariBuku() {
+            const keyword = document.getElementById('input-cari').value.toLowerCase();
+            // Filter buku berdasarkan judul atau penulis yang cocok dengan keyword
+            const hasilPencarian = daftarBuku.filter(buku => 
+                buku.judul.toLowerCase().includes(keyword) || 
+                buku.penulis.toLowerCase().includes(keyword)
+            );
+            renderKatalog(hasilPencarian);
+        }
+
+        // 3. Fungsi Pinjam Buku (Tetap sama)
         function pinjamBuku(judul, indexBuku) {
             if (daftarBuku[indexBuku].stok <= 0) {
                 alert("Maaf, stok buku ini sedang habis.");
@@ -91,12 +116,14 @@
             });
             localStorage.setItem('dataPinjaman', JSON.stringify(dataPinjaman));
 
-            // Kurangi stok
             daftarBuku[indexBuku].stok -= 1;
             localStorage.setItem('dataBuku', JSON.stringify(daftarBuku));
 
             alert(`Berhasil! Buku "${judul}" telah diajukan. Silakan cek di halaman Admin.`);
-            renderKatalog(); // Refresh tampilan katalog
+            
+            // Refresh tampilan
+            document.getElementById('input-cari').value = ''; 
+            renderKatalog(); 
         }
 
         function logout() {
