@@ -3,140 +3,66 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Data Peminjaman - Admin</title>
+    <title>Data Peminjaman</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
-        body { background-color: #f0f2f5; color: #333; }
-        .navbar { background-color: #ffffff; padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 10px rgba(0,0,0,0.05); position: sticky; top: 0; z-index: 100; }
+        body { background-color: #f0f2f5; }
+        .navbar { background: #fff; padding: 15px 20px; display: flex; justify-content: space-between; box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
         .navbar h1 { font-size: 18px; color: #1a73e8; }
-        .navbar a { color: #1a73e8; text-decoration: none; font-size: 14px; font-weight: bold; padding: 8px 15px; border-radius: 8px; background-color: #e8f0fe; transition: 0.3s; }
-        .navbar a:hover { background-color: #d2e3fc; }
+        .navbar a { color: #1a73e8; text-decoration: none; font-weight: bold; background: #e8f0fe; padding: 8px 15px; border-radius: 8px; }
         .container { padding: 25px 20px; max-width: 1000px; margin: auto; }
-        .header-actions { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
-        .header-actions h2 { color: #333; font-size: 22px; }
-        .table-container { background: white; border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); overflow-x: auto; }
+        .table-container { background: white; border-radius: 15px; overflow-x: auto; box-shadow: 0 4px 15px rgba(0,0,0,0.05); }
         table { width: 100%; border-collapse: collapse; }
-        th, td { padding: 15px; text-align: left; font-size: 14px; }
-        th { background-color: #f8f9fa; color: #555; font-weight: 600; border-bottom: 2px solid #eaeaea; }
-        td { border-bottom: 1px solid #eaeaea; color: #444; }
-        tr:last-child td { border-bottom: none; }
-        tr:hover td { background-color: #f9fbff; }
+        th, td { padding: 15px; text-align: left; border-bottom: 1px solid #eee; }
+        th { background: #f8f9fa; color: #555; }
         .badge { padding: 5px 10px; border-radius: 6px; font-size: 12px; font-weight: bold; }
-        .badge-dipinjam { background-color: #fff3cd; color: #856404; }
-        .badge-kembali { background-color: #d4edda; color: #155724; }
-        .btn-aksi { padding: 6px 12px; border: none; border-radius: 6px; cursor: pointer; font-size: 12px; font-weight: bold; transition: 0.2s; }
-        .btn-kembali { background-color: #e8f0fe; color: #1a73e8; }
-        .btn-kembali:hover { background-color: #d2e3fc; }
+        .bg-dipinjam { background: #fff3cd; color: #856404; }
+        .bg-kembali { background: #d4edda; color: #155724; }
+        .btn-aksi { padding: 6px 12px; border: none; border-radius: 6px; cursor: pointer; font-weight: bold; }
+        .btn-kembali { background: #e8f0fe; color: #1a73e8; }
     </style>
 </head>
 <body>
-
-    <nav class="navbar">
-        <h1>📋 Data Peminjaman (Admin)</h1>
-        <a href="dashboard.html">← Kembali ke Dashboard</a>
-    </nav>
-
+    <nav class="navbar"><h1>📋 Data Peminjaman</h1><a href="dashboard.html">← Kembali</a></nav>
     <div class="container">
-        <div class="header-actions">
-            <h2>Daftar Transaksi Peminjaman</h2>
-        </div>
-
         <div class="table-container">
             <table>
-                <thead>
-                    <tr>
-                        <th>No</th>
-                        <th>Nama Peminjam</th>
-                        <th>Judul Buku</th>
-                        <th>Tgl Pinjam</th>
-                        <th>Jatuh Tempo</th>
-                        <th>Status</th>
-                        <th>Aksi</th>
-                    </tr>
-                </thead>
-                <tbody id="tabel-peminjaman">
-                    <!-- Data akan diisi JS -->
-                </tbody>
+                <thead><tr><th>No</th><th>Nama</th><th>Buku</th><th>Tgl Pinjam</th><th>Jatuh Tempo</th><th>Status</th><th>Aksi</th></tr></thead>
+                <tbody id="tabel-peminjaman"></tbody>
             </table>
         </div>
     </div>
-
     <script>
         let dataPinjaman = JSON.parse(localStorage.getItem('dataPinjaman')) || [];
         const tbody = document.getElementById('tabel-peminjaman');
-
         function renderTabel() {
-            tbody.innerHTML = ''; 
-
-            if (dataPinjaman.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="7" style="text-align:center; padding: 20px;">Belum ada pengajuan peminjaman dari Anggota.</td></tr>`;
-                return;
-            }
-
+            tbody.innerHTML = '';
+            if (dataPinjaman.length === 0) { tbody.innerHTML = `<tr><td colspan="7" style="text-align:center;">Belum ada transaksi.</td></tr>`; return; }
             dataPinjaman.forEach((item, index) => {
-                let badgeClass = item.status === 'Dipinjam' ? 'badge-dipinjam' : 'badge-kembali';
-                let tombolAksi = item.status === 'Dipinjam' 
-                    ? `<button class="btn-aksi btn-kembali" onclick="prosesKembali(${index})">Proses Kembali</button>`
-                    : `<button class="btn-aksi" disabled style="background:#eee; color:#aaa; cursor:not-allowed;">Selesai</button>`;
-
-                let tglJatuhTempo = item.tglJatuhTempo ? item.tglJatuhTempo : "-";
-
-                tbody.innerHTML += `
-                    <tr>
-                        <td>${index + 1}</td>
-                        <td>${item.nama}</td>
-                        <td>${item.judul}</td>
-                        <td>${item.tglPinjam}</td>
-                        <td>${tglJatuhTempo}</td>
-                        <td><span class="badge ${badgeClass}">${item.status}</span></td>
-                        <td>${tombolAksi}</td>
-                    </tr>
-                `;
+                let badge = item.status === 'Dipinjam' ? 'bg-dipinjam' : 'bg-kembali';
+                let btn = item.status === 'Dipinjam' ? `<button class="btn-aksi btn-kembali" onclick="prosesKembali(${index})">Proses Kembali</button>` : `<span style="color:#aaa;">Selesai</span>`;
+                tbody.innerHTML += `<tr><td>${index+1}</td><td>${item.nama}</td><td>${item.judul}</td><td>${item.tglPinjam}</td><td>${item.tglJatuhTempo || '-'}</td>
+                <td><span class="badge ${badge}">${item.status}</span></td><td>${btn}</td></tr>`;
             });
         }
-
         function prosesKembali(index) {
-            let hariIni = new Date();
-            let tanggalJatuhTempo = new Date(dataPinjaman[index].tglJatuhTempo);
-            
-            let pesanKonfirmasi = "Proses pengembalian buku ini?";
-            let denda = 0;
-
+            let hariIni = new Date(); hariIni.setHours(0,0,0,0);
+            let tglJatuhTempo = new Date(dataPinjaman[index].tglJatuhTempo);
+            let pesan = "Proses pengembalian?", denda = 0;
             if (dataPinjaman[index].tglJatuhTempo) {
-                hariIni.setHours(0,0,0,0);
-                tanggalJatuhTempo.setHours(0,0,0,0);
-
-                let selisihWaktu = hariIni.getTime() - tanggalJatuhTempo.getTime();
-                let selisihHari = Math.ceil(selisihWaktu / (1000 * 3600 * 24));
-
-                if (selisihHari > 0) {
-                    denda = selisihHari * 1000; 
-                    pesanKonfirmasi = `⚠️ BUKU TERLAMBAT ${selisihHari} HARI!\n\nDenda yang harus dibayar: Rp ${denda.toLocaleString('id-ID')}\n\nApakah denda sudah dibayar dan buku diterima?`;
-                }
+                let selisih = Math.ceil((hariIni.getTime() - tglJatuhTempo.getTime()) / (1000 * 3600 * 24));
+                if (selisih > 0) { denda = selisih * 1000; pesan = `⚠️ TERLAMBAT ${selisih} HARI!\nDenda: Rp ${denda.toLocaleString('id-ID')}\n\nLanjutkan?`; }
             }
-
-            if (confirm(pesanKonfirmasi)) {
+            if (confirm(pesan)) {
                 dataPinjaman[index].status = "Dikembalikan";
                 localStorage.setItem('dataPinjaman', JSON.stringify(dataPinjaman));
-
                 let daftarBuku = JSON.parse(localStorage.getItem('dataBuku')) || [];
-                let bukuIndex = daftarBuku.findIndex(b => b.judul === dataPinjaman[index].judul);
-                
-                if (bukuIndex !== -1) {
-                    daftarBuku[bukuIndex].stok = parseInt(daftarBuku[bukuIndex].stok) + 1; 
-                    localStorage.setItem('dataBuku', JSON.stringify(daftarBuku));
-                }
-
-                if (denda > 0) {
-                    alert(`Pengembalian diproses. Denda Rp ${denda.toLocaleString('id-ID')} telah dicatat.`);
-                } else {
-                    alert("Buku berhasil dikembalikan tepat waktu. Tidak ada denda.");
-                }
-                
-                renderTabel(); 
+                let bIndex = daftarBuku.findIndex(b => b.judul === dataPinjaman[index].judul);
+                if (bIndex !== -1) { daftarBuku[bIndex].stok++; localStorage.setItem('dataBuku', JSON.stringify(daftarBuku)); }
+                alert(denda > 0 ? `Denda Rp ${denda} dicatat.` : "Tepat waktu.");
+                renderTabel();
             }
         }
-
         renderTabel();
     </script>
 </body>
